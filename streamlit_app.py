@@ -32,7 +32,7 @@ TXT = {
         "booking_info": "Aquesta acció ens ajuda a mesurar l'interès del projecte.",
         "cancel_warning": "⚠️ Avís: Si passats 10 minuts de la reserva no hi ha ningú, es cancel·larà.",
         "loc": "Ubicació",
-        "space": "Tipus d'Espai",
+        "space": "Tipus de Servei",
         "date": "Data",
         "hours": "Hores",
         "price": "Preu total estimat",
@@ -63,7 +63,7 @@ TXT = {
         "booking_info": "Esta acción nos ayuda a medir el interés del proyecto.",
         "cancel_warning": "⚠️ Aviso: Si pasados 10 minutos de la reserva no hay nadie, se cancelará.",
         "loc": "Ubicación",
-        "space": "Tipo de Espacio",
+        "space": "Tipo de Servicio",
         "date": "Fecha",
         "hours": "Horas",
         "price": "Precio total estimado",
@@ -94,7 +94,7 @@ TXT = {
         "booking_info": "This action helps us measure project interest.",
         "cancel_warning": "⚠️ Notice: If no one is present 10 min after the booking, it will be cancelled.",
         "loc": "Location",
-        "space": "Space Type",
+        "space": "Service Type",
         "date": "Date",
         "hours": "Hours",
         "price": "Estimated total price",
@@ -157,10 +157,10 @@ with tabs[0]:
     st.markdown('<div class="ec-card">', unsafe_allow_html=True)
     st.info(t["mvp"])
     st.markdown("### Focus & Silence")
-    st.write("EspaiCalma es la solución para estudiantes y profesionales que no encuentran silencio en bibliotecas o cafeterías.")
+    st.write("EspaiCalma és la solució ideal per a qui busca un ambient de treball lliure de sorolls.")
     st.markdown("</div>", unsafe_allow_html=True)
 
-# --- TAB SERVICIOS (CON IMÁGENES) ---
+# --- TAB SERVEIS (CON IMÁGENES) ---
 with tabs[1]:
     st.markdown('<div class="ec-card">', unsafe_allow_html=True)
     st.subheader(t["spaces_title"])
@@ -173,12 +173,12 @@ with tabs[1]:
     st.write("3 € / hora")
     st.markdown("</div>", unsafe_allow_html=True)
 
-# --- TAB EQUIPO (CORREGIDO) ---
+# --- TAB EQUIPO (NOMBRES REALES DEL PDF) ---
 with tabs[2]:
     st.markdown('<div class="ec-card">', unsafe_allow_html=True)
     st.subheader(t["team_title"])
     e1, e2, e3, e4 = st.columns(4)
-    e1.markdown('<div class="team-card"><b>Aleix Trogal</b><br><span>CEO & Estrategia</span></div>', unsafe_allow_html=True)
+    e1.markdown('<div class="team-card"><b>Aleix Trogal</b><br><span>CEO & Estratègia</span></div>', unsafe_allow_html=True)
     e2.markdown('<div class="team-card"><b>Eloi Gil</b><br><span>Marketing Manager</span></div>', unsafe_allow_html=True)
     e3.markdown('<div class="team-card"><b>Marc Vidal</b><br><span>CFO & Finances</span></div>', unsafe_allow_html=True)
     e4.markdown('<div class="team-card"><b>Junyi Jie</b><br><span>CTO & Design</span></div>', unsafe_allow_html=True)
@@ -192,7 +192,7 @@ with tabs[3]:
     with st.expander(t["faq2"]): st.write(t["faq2a"])
     st.markdown("</div>", unsafe_allow_html=True)
 
-# --- TAB CONTACTO (VALIDACIÓN EMAIL) ---
+# --- TAB CONTACTE (CON VALIDACIÓN) ---
 with tabs[4]:
     st.markdown('<div class="ec-card">', unsafe_allow_html=True)
     st.subheader(t["contact_title"])
@@ -207,23 +207,48 @@ with tabs[4]:
                 st.success("Sent!")
     st.markdown("</div>", unsafe_allow_html=True)
 
-# --- TAB RESERVA (VALIDACIÓN ESTRICTA) ---
+# --- TAB RESERVA (AÑADIDAS LOCALIZACIÓN Y SERVICIO) ---
 with tabs[5]:
     st.markdown('<div class="ec-card">', unsafe_allow_html=True)
     st.subheader(t["booking_title"])
-    st.markdown(f'<div style="color:red; font-weight:bold; margin-bottom:10px;">{t["cancel_warning"]}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="color:red; font-weight:bold; margin-bottom:15px;">{t["cancel_warning"]}</div>', unsafe_allow_html=True)
+    
     with st.form("b_form"):
+        st.markdown("#### 1. Datos de Usuario")
         col_a, col_b = st.columns(2)
         n_v = col_a.text_input(t["name"])
         s_v = col_a.text_input(t["surname"])
         m_v = col_b.text_input(t["email"])
         p_v = col_b.text_input(t["phone"])
-        h_v = st.slider(t["hours"], 1, 8, 2)
-        st.write(f"**Total: {h_v * 3} €**")
-        if st.form_submit_button(t["booking_confirm"]):
-            if not n_v or not s_v or not m_v or not p_v:
+        
+        st.divider()
+        st.markdown("#### 2. Detalles del Servicio")
+        col_c, col_d = st.columns(2)
+        with col_c:
+            # Añadida la Localización
+            localizacion = st.selectbox(t["loc"], [
+                "EEBE - Campus Besòs (UPC)", 
+                "Zona Universitària - Les Corts", 
+                "Eixample Dret"
+            ])
+            # Añadido el Tipo de Servicio
+            tipo_servicio = st.selectbox(t["space"], [
+                "Cabina Privada (1 pers)", 
+                "Sala de Treball (2-4 pers)", 
+                "Zona Silenci Obert", 
+                "Zona Confort / Soft Seating"
+            ])
+        
+        with col_d:
+            fecha = st.date_input(t["date"], min_value=date.today())
+            h_v = st.slider(t["hours"], 1, 8, 2)
+            
+        st.write(f"### {t['price']}: {h_v * 3} €")
+        
+        if st.form_submit_button(t["booking_confirm"], use_container_width=True):
+            if not n_v.strip() or not s_v.strip() or not m_v.strip() or not p_v.strip():
                 st.error(t["booking_error"])
             else:
-                st.success(t["booking_ok"])
+                st.success(f"{t['booking_ok']} - Ubicació: {localizacion}")
                 st.balloons()
     st.markdown("</div>", unsafe_allow_html=True)
