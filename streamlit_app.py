@@ -135,24 +135,24 @@ footer {{visibility:hidden;}}
 
 /* Contenedor centrado */
 .ec-wrap {{
-  max-width: 1100px;
-  margin: 38px auto;
-  padding: 0 18px;
+  max-width: 1200px;
+  margin: 50px auto;
+  padding: 0 30px;
 }}
 
 /* Título estilo portada */
 .ec-hero-title {{
-  font-size: 52px;
-  font-weight: 900;
+  font-size: 66px;
+  font-weight: 1000;
   color: white;
   margin: 0 0 6px 0;
-  text-shadow: 0 10px 28px rgba(0,0,0,.35);
+  text-shadow: 0 10px 30px rgba(0,0,0,.35);
 }}
 .ec-hero-sub {{
-  font-size: 18px;
+  font-size: 30px;
   color: rgba(255,255,255,.92);
-  margin: 0 0 18px 0;
-  text-shadow: 0 10px 28px rgba(0,0,0,.35);
+  margin: 0 0 20px 0;
+  text-shadow: 0 10px 30px rgba(0,0,0,.35);
 }}
 
 /* Tarjeta blanca translúcida */
@@ -179,7 +179,7 @@ footer {{visibility:hidden;}}
   background: rgba(201,173,120,.95);
   color: #1b1f24;
   border: 1px solid rgba(0,0,0,.06);
-  font-weight: 900;
+  font-weight: 1000;
 }}
 
 /* Botones idioma compactos */
