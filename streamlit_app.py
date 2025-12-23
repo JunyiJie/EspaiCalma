@@ -1,10 +1,15 @@
-# app.py  — EspaiCalma (Streamlit) estilo igual al mockup
+# app.py  — EspaiCalma (Streamlit) estilo igual al mockup (con sidebar fijo)
 # Ejecuta:  streamlit run app.py
 
 import streamlit as st
 from datetime import date
 
-st.set_page_config(page_title="EspaiCalma", page_icon="🧘", layout="wide")
+st.set_page_config(
+    page_title="EspaiCalma",
+    page_icon="🧘",
+    layout="wide",
+    initial_sidebar_state="expanded",  # <-- IMPORTANTE: que salga desplegado
+)
 
 # ---------------------------
 # ESTADO
@@ -14,13 +19,43 @@ if "page" not in st.session_state:
 if "lang" not in st.session_state:
     st.session_state.lang = "CAT"
 
-def go(page: str):
-    st.session_state.page = page
+def go(p: str):
+    st.session_state.page = p
+
+# ---------------------------
+# TEXTOS (i18n)
+# ---------------------------
+T = {
+    "CAT": {
+        "Inici": ("Benvingut/da", "Espais tranquils i còmodes per estudiar o treballar, reservables per hores."),
+        "Espais i Serveis": ("Espais i Serveis", "Tria l’espai que millor s’adapta a tu."),
+        "FAQs": ("FAQs", "Respostes ràpides als dubtes més freqüents."),
+        "Sobre Nosaltres": ("Sobre Nosaltres", "EspaiCalma neix per facilitar concentració, productivitat i benestar."),
+        "Contacte": ("Contacte", "Envia’ns un missatge i et respondrem."),
+        "Reserva": ("Reserva", "Simula una reserva (MVP). Sense pagament real."),
+    },
+    "ESP": {
+        "Inici": ("Bienvenido/a", "Espacios tranquilos y cómodos para estudiar o trabajar, reservables por horas."),
+        "Espais i Serveis": ("Espacios y Servicios", "Elige el espacio que mejor se adapte a ti."),
+        "FAQs": ("FAQs", "Respuestas rápidas a las dudas más frecuentes."),
+        "Sobre Nosaltres": ("Sobre Nosotros", "EspaiCalma nace para mejorar concentración, productividad y bienestar."),
+        "Contacte": ("Contacto", "Envíanos un mensaje y te respondemos."),
+        "Reserva": ("Reserva", "Simula una reserva (MVP). Sin pago real."),
+    },
+    "ENG": {
+        "Inici": ("Welcome", "Quiet, comfortable spaces to study or work, bookable by the hour."),
+        "Espais i Serveis": ("Spaces & Services", "Pick the space that fits you best."),
+        "FAQs": ("FAQs", "Quick answers to common questions."),
+        "Sobre Nosaltres": ("About Us", "EspaiCalma helps people focus, be productive, and feel calm."),
+        "Contacte": ("Contact", "Send us a message and we’ll get back to you."),
+        "Reserva": ("Booking", "Simulate a booking (MVP). No real payment."),
+    },
+}
 
 # ---------------------------
 # CSS (sidebar + fondo + look)
 # ---------------------------
-BG = "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=2000&q=70"
+BG = "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=2200&q=70"
 
 st.markdown(
     f"""
@@ -39,18 +74,30 @@ header {{visibility:hidden;}}
 #MainMenu {{visibility:hidden;}}
 footer {{visibility:hidden;}}
 
-/* Sidebar blanco tipo tarjeta */
-[data-testid="stSidebar"] {{
+/* Forzar sidebar visible y ancho (evita que "desaparezca") */
+section[data-testid="stSidebar"] {{
+  min-width: 360px !important;
+  max-width: 360px !important;
+  width: 360px !important;
   background: transparent !important;
 }}
-[data-testid="stSidebar"] > div:first-child {{
+/* quitar padding interno del sidebar */
+section[data-testid="stSidebar"] > div:first-child {{
   padding: 0 !important;
 }}
+
+/* Ajuste del contenedor principal para que NO tape visualmente el panel */
+.block-container {{
+  padding-top: 1.2rem;
+  padding-left: 1.2rem;
+  padding-right: 1.2rem;
+}}
+
+/* Tarjeta del sidebar */
 .ec-side {{
-  width: 320px;
   margin: 22px 0 22px 22px;
   background: rgba(255,255,255,.92);
-  border-radius: 10px;
+  border-radius: 12px;
   box-shadow: 0 18px 55px rgba(0,0,0,.20);
   overflow: hidden;
 }}
@@ -106,17 +153,12 @@ footer {{visibility:hidden;}}
   border-radius: 0 !important;
   background: #c9ad78 !important;
   color: #ffffff !important;
-  font-weight: 700 !important;
+  font-weight: 800 !important;
   font-size: 18px !important;
   text-align: left !important;
 }}
 .ec-cta > button:hover {{
   filter: brightness(.98);
-}}
-.ec-divider {{
-  height: 1px;
-  background: rgba(0,0,0,.06);
-  margin: 8px 0;
 }}
 .ec-cta-wrap {{
   margin: 10px -18px 0 -18px;
@@ -126,25 +168,17 @@ footer {{visibility:hidden;}}
 
 /* Idiomas */
 .ec-lang {{
-  display:flex;
-  gap:14px;
-  padding: 14px 4px 8px 4px;
-  color: #8b9898;
-  font-size: 12px;
-  letter-spacing: .7px;
+  padding: 14px 0 8px 0;
 }}
-.ec-lang button {{
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: inherit;
-  font: inherit;
-  padding: 4px 0;
-  border-bottom: 2px solid transparent;
+.ec-lang .stButton > button {{
+  width: 100%;
+  border: none !important;
+  background: rgba(0,0,0,.04) !important;
+  border-radius: 10px !important;
+  font-weight: 700 !important;
 }}
-.ec-lang button.active {{
-  color: #6b7a7a;
-  border-bottom-color: #c9ad78;
+.ec-lang .stButton > button:hover {{
+  background: rgba(201,173,120,.18) !important;
 }}
 
 /* Social */
@@ -164,13 +198,13 @@ footer {{visibility:hidden;}}
   background: rgba(0,0,0,.04);
   text-decoration:none;
   color: #6f7d7d;
-  font-weight: 700;
+  font-weight: 800;
 }}
 .ec-social a:hover {{
   background: rgba(201,173,120,.18);
 }}
 
-/* Contenido principal como tarjeta transparente */
+/* Contenido principal como tarjeta */
 .ec-main {{
   margin: 22px 22px 22px 0;
   background: rgba(255,255,255,.86);
@@ -181,7 +215,7 @@ footer {{visibility:hidden;}}
 }}
 .ec-h1 {{
   font-size: 34px;
-  font-weight: 650;
+  font-weight: 700;
   color: #4f5e5e;
   margin: 0 0 8px 0;
 }}
@@ -189,7 +223,7 @@ footer {{visibility:hidden;}}
   color:#6f7d7d;
 }}
 
-/* Mejorar spacing en widgets */
+/* Mejorar spacing widgets */
 .stTextInput, .stSelectbox, .stDateInput, .stSlider, .stTextArea {{
   margin-top: .25rem;
 }}
@@ -202,7 +236,6 @@ footer {{visibility:hidden;}}
 # ICONOS (SVG simples)
 # ---------------------------
 def svg(icon: str) -> str:
-    # icon: home, leaf, faq, info, mail, cal
     icons = {
         "home": """<svg width="18" height="18" viewBox="0 0 24 24" fill="#6f7d7d"><path d="M12 3l9 8h-3v10h-5v-6H11v6H6V11H3l9-8z"/></svg>""",
         "leaf": """<svg width="18" height="18" viewBox="0 0 24 24" fill="#6f7d7d"><path d="M17 8c-4.5 0-8 3.5-8 8 0 1.2.3 2.3.7 3.3C6.4 18 4 15 4 11 4 6.6 7.6 3 12 3c2 0 3.9.8 5.3 2.1C16.6 6 16.9 7 17 8z"/><path d="M20 10c0 6-4 11-11 11 6-3 8-7 9-11h2z"/></svg>""",
@@ -219,15 +252,13 @@ def svg(icon: str) -> str:
 with st.sidebar:
     st.markdown('<div class="ec-side"><div class="ec-side-inner">', unsafe_allow_html=True)
 
-    # Brand
     st.markdown(
-        f"""
+        """
 <div class="ec-brand">
   <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">
     <path d="M12 26 L32 12 L52 26" stroke="#6f7d7d" stroke-width="3" fill="none" opacity="0.65"/>
     <rect x="29.5" y="16" width="5" height="5" rx="1" fill="#6f7d7d" opacity="0.65"/>
     <path d="M18 38c5-9 9-10 14-10s9 1 14 10c-3 8-9 12-14 12s-11-4-14-12z" fill="#c9ad78" opacity="0.95"/>
-    <path d="M32 30c-4 0-7 3-7 7 0 4 3 7 7 7s7-3 7-7c0-4-3-7-7-7z" fill="#fff" opacity="0.35"/>
   </svg>
   <div class="ec-title">Espai<span>Calma</span></div>
 </div>
@@ -235,10 +266,7 @@ with st.sidebar:
         unsafe_allow_html=True,
     )
 
-    # Nav buttons
     def nav_button(label, icon_key, target):
-        # Use streamlit button but we fake icon with emoji fallback in label
-        # for reliability; we also show SVG to the left via markdown line above.
         cols = st.columns([0.12, 0.88])
         with cols[0]:
             st.markdown(svg(icon_key), unsafe_allow_html=True)
@@ -255,7 +283,6 @@ with st.sidebar:
     nav_button("Contacte", "mail", "Contacte")
     st.markdown("</div>", unsafe_allow_html=True)
 
-    # CTA Reserva
     st.markdown('<div class="ec-cta-wrap">', unsafe_allow_html=True)
     cta_cols = st.columns([0.12, 0.88])
     with cta_cols[0]:
@@ -266,19 +293,6 @@ with st.sidebar:
         st.markdown("</div>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
-    # Lang selector (HTML buttons)
-    def lang_btn(code):
-        active = "active" if st.session_state.lang == code else ""
-        st.markdown(
-            f"""
-<form action="" method="post">
-  <button class="{active}" type="button" onclick="window.location.hash='{code}'">{code}</button>
-</form>
-""",
-            unsafe_allow_html=True,
-        )
-
-    # Real lang buttons using Streamlit (simple & reliable)
     st.markdown('<div class="ec-lang">', unsafe_allow_html=True)
     b1, b2, b3 = st.columns(3)
     with b1:
@@ -292,11 +306,10 @@ with st.sidebar:
             st.session_state.lang = "ENG"
     st.markdown("</div>", unsafe_allow_html=True)
 
-    # Social
     st.markdown(
         """
 <div class="ec-social">
-  <a href="https://instagram.com" target="_blank" title="Instagram">▢</a>
+  <a href="https://instagram.com" target="_blank" title="Instagram">◎</a>
   <a href="https://x.com" target="_blank" title="X">X</a>
   <a href="https://linkedin.com" target="_blank" title="LinkedIn">in</a>
 </div>
@@ -307,43 +320,16 @@ with st.sidebar:
     st.markdown("</div></div>", unsafe_allow_html=True)
 
 # ---------------------------
-# CONTENIDO (texto por idioma)
-# ---------------------------
-T = {
-    "CAT": {
-        "Inici": ("Benvingut/da", "Espais tranquils i còmodes per estudiar o treballar, reservables per hores."),
-        "Espais i Serveis": ("Espais i Serveis", "Tria l’espai que millor s’adapta a tu."),
-        "FAQs": ("FAQs", "Respostes ràpides als dubtes més freqüents."),
-        "Sobre Nosaltres": ("Sobre Nosaltres", "EspaiCalma neix per facilitar concentració, productivitat i benestar."),
-        "Contacte": ("Contacte", "Envia’ns un missatge i et respondrem."),
-        "Reserva": ("Reserva", "Simula una reserva (MVP). Sense pagament real."),
-    },
-    "ESP": {
-        "Inici": ("Bienvenido/a", "Espacios tranquilos y cómodos para estudiar o trabajar, reservables por horas."),
-        "Espais i Serveis": ("Espacios y Servicios", "Elige el espacio que mejor se adapte a ti."),
-        "FAQs": ("FAQs", "Respuestas rápidas a las dudas más frecuentes."),
-        "Sobre Nosaltres": ("Sobre Nosotros", "EspaiCalma nace para mejorar concentración, productividad y bienestar."),
-        "Contacte": ("Contacto", "Envíanos un mensaje y te respondemos."),
-        "Reserva": ("Reserva", "Simula una reserva (MVP). Sin pago real."),
-    },
-    "ENG": {
-        "Inici": ("Welcome", "Quiet, comfortable spaces to study or work, bookable by the hour."),
-        "Espais i Serveis": ("Spaces & Services", "Pick the space that fits you best."),
-        "FAQs": ("FAQs", "Quick answers to common questions."),
-        "Sobre Nosaltres": ("About Us", "EspaiCalma helps people focus, be productive, and feel calm."),
-        "Contacte": ("Contact", "Send us a message and we’ll get back to you."),
-        "Reserva": ("Booking", "Simulate a booking (MVP). No real payment."),
-    },
-}
-
-# ---------------------------
-# MAIN WRAPPER
+# MAIN
 # ---------------------------
 page = st.session_state.page
 lang = st.session_state.lang
 title, subtitle = T[lang][page]
 
-st.markdown(f'<div class="ec-main"><div class="ec-h1">{title}</div><div class="ec-muted">{subtitle}</div><br/>', unsafe_allow_html=True)
+st.markdown(
+    f'<div class="ec-main"><div class="ec-h1">{title}</div><div class="ec-muted">{subtitle}</div><br/>',
+    unsafe_allow_html=True
+)
 
 # ---------------------------
 # PÁGINAS
@@ -362,13 +348,22 @@ elif page == "Espais i Serveis":
     st.subheader("Espais (exemple)" if lang != "ENG" else "Spaces (sample)")
     c1, c2, c3 = st.columns(3)
     with c1:
-        st.image("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=900&q=70", caption="Sala privada (1)")
+        st.image(
+            "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=900&q=70",
+            caption="Sala privada (1)"
+        )
         st.caption("Wi-Fi • Silenci • Endolls")
     with c2:
-        st.image("https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=900&q=70", caption="Sala petita (2)")
+        st.image(
+            "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=900&q=70",
+            caption="Sala petita (2)"
+        )
         st.caption("Ideal per reunions")
     with c3:
-        st.image("https://images.unsplash.com/photo-1449247709967-d4461a6a6103?auto=format&fit=crop&w=900&q=70", caption="Llum natural")
+        st.image(
+            "https://images.unsplash.com/photo-1449247709967-d4461a6a6103?auto=format&fit=crop&w=900&q=70",
+            caption="Llum natural"
+        )
         st.caption("Ventilació • Confort")
 
     st.subheader("Tarifes" if lang != "ENG" else "Pricing")
@@ -404,9 +399,11 @@ elif page == "Contacte":
 elif page == "Reserva":
     with st.form("booking"):
         loc = st.selectbox("Ubicació" if lang != "ENG" else "Location", ["Eixample", "Gràcia", "Sants", "Poblenou"])
-        sp = st.selectbox("Espai" if lang == "CAT" else "Espacio" if lang == "ESP" else "Space",
-                          ["Sala privada (1)", "Sala petita (2)", "Llum natural"])
-        d = st.date_input("Data" if lang != "ENG" else "Date", value=date.today())
+        sp = st.selectbox(
+            "Espai" if lang == "CAT" else "Espacio" if lang == "ESP" else "Space",
+            ["Sala privada (1)", "Sala petita (2)", "Llum natural"]
+        )
+        st.date_input("Data" if lang != "ENG" else "Date", value=date.today())
         h = st.slider("Hores" if lang != "ENG" else "Hours", 1, 8, 2)
         price = 3
         st.write(f"Preu estimat: **{h*price} €** ({price} €/hora)")
