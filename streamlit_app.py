@@ -1,17 +1,17 @@
 import streamlit as st
 from datetime import date
 
-# Configuro la pàgina
+# Configuración de la página
 st.set_page_config(page_title="EspaiCalma", page_icon="🧘", layout="wide")
 
 # ---------------------------
-# ESTAT DE L'IDIOMA
+# ESTADO DEL IDIOMA
 # ---------------------------
 if "lang" not in st.session_state:
     st.session_state.lang = "CAT"
 
 # ---------------------------
-# DICCIONARI DE TEXTOS
+# DICCIONARIO DE TEXTOS (CAT, ESP, ENG)
 # ---------------------------
 TXT = {
     "CAT": {
@@ -21,61 +21,96 @@ TXT = {
         "spaces_title": "Els Nostres Espais",
         "spaces_sub": "Tria l'ambient que millor s'adapti al teu flux de treball.",
         "faqs_title": "Preguntes Freqüents",
-        "about_title": "Sobre el Projecte",
+        "about_title": "Sobre Nosaltres",
         "contact_title": "Contacte",
         "booking_title": "Reserva el teu espai",
         "contact_send": "Enviar Missatge",
         "booking_confirm": "Confirmar reserva",
         "booking_ok": "✅ Reserva simulada amb èxit!",
-        "booking_error": "❌ Error: Has d'emplenar Nom, Cognoms, Email i Telèfon.",
-        "contact_error": "❌ Error: Si us plau, introdueix el teu correu electrònic.",
-        "booking_info": "Aquesta acció ens ajuda a mesurar l'interès real del projecte.",
-        "cancel_warning": "⚠️ Avís: Si passats 10 minuts de l'hora de reserva no hi ha ningú, la reserva es cancel·larà.",
+        "booking_error": "❌ Error: Emplena Nom, Cognoms, Email i Telèfon.",
+        "contact_error": "❌ Error: Introdueix el teu correu electrònic per enviar el missatge.",
+        "booking_info": "Aquesta acció ens ajuda a mesurar l'interès del projecte.",
+        "cancel_warning": "⚠️ Avís: Si passats 10 minuts de la reserva no hi ha ningú, es cancel·larà.",
         "loc": "Ubicació",
         "space": "Tipus d'Espai",
         "date": "Data",
-        "hours": "Durada (Hores)",
+        "hours": "Hores",
         "price": "Preu total estimat",
         "name": "Nom",
         "surname": "Cognoms",
         "email": "Email",
         "phone": "Telèfon",
-        "pricing": "Tarifes i Packs",
+        "pricing": "Tarifes",
         "team_title": "Equip Directiu",
+        "faq1": "Com funciona?", "faq1a": "Selecciona espai, data i confirma dades.",
+        "faq2": "On som?", "faq2a": "A prop de la UPC (EEBE) i Zona Universitària.",
     },
     "ESP": {
         "welcome": "EspaiCalma",
         "subtitle": "Tu red de espacios privados para el silencio y la concentración.",
         "mvp": "🚀 MVP: Demo oficial para la validación del Plan de Empresa.",
         "spaces_title": "Nuestros Espacios",
-        "spaces_sub": "Elige el ambiente que mejor se adapte a tu flujo de trabajo.",
+        "spaces_sub": "Elige el ambiente que mejor se adapte a tu trabajo.",
         "faqs_title": "Preguntas Frecuentes",
-        "about_title": "Sobre el Proyecto",
+        "about_title": "Sobre Nosotros",
         "contact_title": "Contacto",
         "booking_title": "Reserva tu espacio",
         "contact_send": "Enviar Mensaje",
         "booking_confirm": "Confirmar reserva",
         "booking_ok": "✅ ¡Reserva simulada con éxito!",
-        "booking_error": "❌ Error: Debes rellenar Nombre, Apellidos, Email y Teléfono.",
-        "contact_error": "❌ Error: Por favor, introduce tu correo electrónico.",
-        "booking_info": "Esta acción nos ayuda a medir el interés real del proyecto.",
-        "cancel_warning": "⚠️ Aviso: Si pasados 10 minutos de la hora de reserva no hay nadie, la reserva se cancelará.",
+        "booking_error": "❌ Error: Rellena Nombre, Apellidos, Email y Teléfono.",
+        "contact_error": "❌ Error: Introduce tu email para enviar el mensaje.",
+        "booking_info": "Esta acción nos ayuda a medir el interés del proyecto.",
+        "cancel_warning": "⚠️ Aviso: Si pasados 10 minutos de la reserva no hay nadie, se cancelará.",
         "loc": "Ubicación",
         "space": "Tipo de Espacio",
         "date": "Fecha",
-        "hours": "Duración (Horas)",
+        "hours": "Horas",
         "price": "Precio total estimado",
         "name": "Nombre",
         "surname": "Apellidos",
         "email": "Email",
         "phone": "Teléfono",
-        "pricing": "Tarifas y Packs",
+        "pricing": "Tarifas",
         "team_title": "Equipo Directivo",
+        "faq1": "¿Cómo funciona?", "faq1a": "Selecciona espacio, fecha y confirma datos.",
+        "faq2": "¿Dónde estamos?", "faq2a": "Cerca de la UPC (EEBE) y Zona Universitaria.",
+    },
+    "ENG": {
+        "welcome": "EspaiCalma",
+        "subtitle": "Your network of private spaces for silence and focus.",
+        "mvp": "🚀 MVP: Official demo for Business Plan validation.",
+        "spaces_title": "Our Spaces",
+        "spaces_sub": "Choose the environment that best fits your workflow.",
+        "faqs_title": "FAQs",
+        "about_title": "About Us",
+        "contact_title": "Contact",
+        "booking_title": "Book your space",
+        "contact_send": "Send Message",
+        "booking_confirm": "Confirm booking",
+        "booking_ok": "✅ Booking simulated successfully!",
+        "booking_error": "❌ Error: Fill in Name, Surname, Email, and Phone.",
+        "contact_error": "❌ Error: Please enter your email to send the message.",
+        "booking_info": "This action helps us measure project interest.",
+        "cancel_warning": "⚠️ Notice: If no one is present 10 min after the booking, it will be cancelled.",
+        "loc": "Location",
+        "space": "Space Type",
+        "date": "Date",
+        "hours": "Hours",
+        "price": "Estimated total price",
+        "name": "First Name",
+        "surname": "Last Name",
+        "email": "Email",
+        "phone": "Phone",
+        "pricing": "Pricing",
+        "team_title": "Management Team",
+        "faq1": "How it works?", "faq1a": "Select space, date and confirm your details.",
+        "faq2": "Location?", "faq2a": "Near UPC (EEBE) and Zona Universitària.",
     }
 }
 
 # ---------------------------
-# ESTILS CSS
+# ESTILOS CSS
 # ---------------------------
 BG_URL = "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1920&q=80"
 
@@ -88,125 +123,107 @@ st.markdown(f"""
     }}
     .hero-title {{ font-size: 70px; font-weight: 850; color: white; text-align: center; }}
     .hero-sub {{ font-size: 26px; color: #E0E0E0; text-align: center; margin-bottom: 40px; }}
-    .ec-card {{
-        background: rgba(255, 255, 255, 0.98);
-        padding: 35px; border-radius: 15px;
-        color: #1a1a1a;
-    }}
-    /* Targetes d'equip amb lletres visibles (Negre) */
+    .ec-card {{ background: rgba(255, 255, 255, 0.98); padding: 35px; border-radius: 15px; color: #1a1a1a; }}
     .team-card {{
-        background: #f1f3f5; 
-        padding: 20px; 
-        border-radius: 10px;
-        text-align: center; 
-        border-top: 5px solid #C9AD78;
-        color: #1a1a1a !important;
-        font-weight: bold;
+        background: #f1f3f5; padding: 20px; border-radius: 10px; text-align: center; 
+        border-top: 5px solid #C9AD78; color: #1a1a1a !important;
     }}
-    .team-card p, .team-card b {{
-        color: #1a1a1a !important;
-    }}
+    .team-card b {{ color: #1a1a1a !important; font-size: 1.2rem; }}
+    .team-card span {{ color: #444 !important; }}
 </style>
 """, unsafe_allow_html=True)
 
+# ---------------------------
+# SELECTOR IDIOMA
+# ---------------------------
+l1, l2, l3, _ = st.columns([1, 1, 1, 7])
+if l1.button("CAT"): st.session_state.lang = "CAT"; st.rerun()
+if l2.button("ESP"): st.session_state.lang = "ESP"; st.rerun()
+if l3.button("ENG"): st.session_state.lang = "ENG"; st.rerun()
+
 lang = st.session_state.lang
-t = TXT.get(lang, TXT["CAT"])
+t = TXT[lang]
 
 # ---------------------------
 # HEADER
 # ---------------------------
-col_l, _ = st.columns([2, 8])
-with col_l:
-    c_cat, c_esp = st.columns(2)
-    if c_cat.button("CAT"): st.session_state.lang = "CAT"; st.rerun()
-    if c_esp.button("ESP"): st.session_state.lang = "ESP"; st.rerun()
-
 st.markdown(f'<h1 class="hero-title">{t["welcome"]}</h1>', unsafe_allow_html=True)
 st.markdown(f'<p class="hero-sub">{t["subtitle"]}</p>', unsafe_allow_html=True)
 
 tabs = st.tabs(["🏠 Inici", "🌿 Serveis", "👥 Equip", "❓ FAQs", "✉️ Contacte", "🗓️ Reserva"])
 
-# --- TAB SERVEIS (AMB IMATGES) ---
+# --- TAB INICI ---
+with tabs[0]:
+    st.markdown('<div class="ec-card">', unsafe_allow_html=True)
+    st.info(t["mvp"])
+    st.markdown("### Focus & Silence")
+    st.write("EspaiCalma es la solución para estudiantes y profesionales que no encuentran silencio en bibliotecas o cafeterías.")
+    st.markdown("</div>", unsafe_allow_html=True)
+
+# --- TAB SERVICIOS (CON IMÁGENES) ---
 with tabs[1]:
     st.markdown('<div class="ec-card">', unsafe_allow_html=True)
     st.subheader(t["spaces_title"])
-    st.write(t["spaces_sub"])
-    
-    col_img1, col_img2, col_img3 = st.columns(3)
-    with col_img1:
-        st.image("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=400", caption="Cabina Privada Insonoritzada")
-    with col_img2:
-        st.image("https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=400", caption="Espai de Coworking Obert")
-    with col_img3:
-        st.image("https://images.unsplash.com/photo-1449247709967-d4461a6a6103?w=400", caption="Zona Confort amb Llum Natural")
-    
+    c1, c2, c3 = st.columns(3)
+    c1.image("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=400", caption="Cabina Privada")
+    c2.image("https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=400", caption="Zona Cowork")
+    c3.image("https://images.unsplash.com/photo-1449247709967-d4461a6a6103?w=400", caption="Zona Confort")
     st.divider()
     st.subheader(t["pricing"])
-    st.write("3 € / hora (Packs de 10h i 20h disponibles)")
+    st.write("3 € / hora")
     st.markdown("</div>", unsafe_allow_html=True)
 
-# --- TAB EQUIP (CORRECCIÓ COLOR LLETRES) ---
+# --- TAB EQUIPO (CORREGIDO) ---
 with tabs[2]:
     st.markdown('<div class="ec-card">', unsafe_allow_html=True)
     st.subheader(t["team_title"])
-    
-    eq1, eq2, eq3, eq4 = st.columns(4)
-    with eq1: st.markdown('<div class="team-card"><b>Aleix Trogal</b><br><span style="color:#555">CEO & Estratègia</span></div>', unsafe_allow_html=True)
-    with eq2: st.markdown('<div class="team-card"><b>Eloi Gil</b><br><span style="color:#555">CMO & Màrqueting</span></div>', unsafe_allow_html=True)
-    with eq3: st.markdown('<div class="team-card"><b>Marc Vidal</b><br><span style="color:#555">CFO & Finances</span></div>', unsafe_allow_html=True)
-    with eq4: st.markdown('<div class="team-card"><b>Junyi Jie</b><br><span style="color:#555">CTO & Disseny</span></div>', unsafe_allow_html=True)
+    e1, e2, e3, e4 = st.columns(4)
+    e1.markdown('<div class="team-card"><b>Aleix Trogal</b><br><span>CEO & Estrategia</span></div>', unsafe_allow_html=True)
+    e2.markdown('<div class="team-card"><b>Eloi Gil</b><br><span>Marketing Manager</span></div>', unsafe_allow_html=True)
+    e3.markdown('<div class="team-card"><b>Marc Vidal</b><br><span>CFO & Finances</span></div>', unsafe_allow_html=True)
+    e4.markdown('<div class="team-card"><b>Junyi Jie</b><br><span>CTO & Design</span></div>', unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
-# --- TAB CONTACTE (VALIDACIÓ EMAIL) ---
+# --- TAB FAQS ---
+with tabs[3]:
+    st.markdown('<div class="ec-card">', unsafe_allow_html=True)
+    st.subheader(t["faqs_title"])
+    with st.expander(t["faq1"]): st.write(t["faq1a"])
+    with st.expander(t["faq2"]): st.write(t["faq2a"])
+    st.markdown("</div>", unsafe_allow_html=True)
+
+# --- TAB CONTACTO (VALIDACIÓN EMAIL) ---
 with tabs[4]:
     st.markdown('<div class="ec-card">', unsafe_allow_html=True)
     st.subheader(t["contact_title"])
-    with st.form("contact_form"):
-        nom_c = st.text_input("Nom i Cognoms")
-        mail_c = st.text_input("Email")
-        msg_c = st.text_area("El teu missatge")
-        
-        btn_c = st.form_submit_button(t["contact_send"])
-        if btn_c:
+    with st.form("c_form"):
+        st.text_input(t["name"])
+        mail_c = st.text_input(t["email"])
+        st.text_area("Message")
+        if st.form_submit_button(t["contact_send"]):
             if not mail_c.strip():
                 st.error(t["contact_error"])
             else:
-                st.success("Missatge enviat correctament. Ens posarem en contacte amb tu!")
+                st.success("Sent!")
     st.markdown("</div>", unsafe_allow_html=True)
 
-# --- TAB RESERVA (VALIDACIÓ ESTRICTA) ---
+# --- TAB RESERVA (VALIDACIÓN ESTRICTA) ---
 with tabs[5]:
     st.markdown('<div class="ec-card">', unsafe_allow_html=True)
     st.subheader(t["booking_title"])
-    st.markdown(f'<div class="warning-text" style="color:red; font-weight:bold;">{t["cancel_warning"]}</div>', unsafe_allow_html=True)
-
-    with st.form("booking_form_v2"):
-        st.markdown("#### 👤 Dades Obligatòries")
-        b1, b2 = st.columns(2)
-        with b1:
-            nom_v = st.text_input(t["name"])
-            cog_v = st.text_input(t["surname"])
-        with b2:
-            mail_v = st.text_input(t["email"])
-            tel_v = st.text_input(t["phone"])
-            
-        st.divider()
-        b3, b4 = st.columns(2)
-        with b3:
-            loc_v = st.selectbox(t["loc"], ["EEBE (Campus Besòs)", "Les Corts (Zona Univ.)"])
-            tip_v = st.selectbox(t["space"], ["Cabina Individual", "Sala de Treball", "Zona Llum Natural"])
-        with b4:
-            dat_v = st.date_input(t["date"], min_value=date.today())
-            hor_v = st.slider(t["hours"], 1, 8, 2)
-
-        st.markdown(f"### Total: {hor_v * 3} €")
-        
-        btn_reserva = st.form_submit_button(t["booking_confirm"], use_container_width=True)
-
-    if btn_reserva:
-        if not nom_v.strip() or not cog_v.strip() or not mail_v.strip() or not tel_v.strip():
-            st.error(t["booking_error"])
-        else:
-            st.success(t["booking_ok"])
-            st.balloons()
+    st.markdown(f'<div style="color:red; font-weight:bold; margin-bottom:10px;">{t["cancel_warning"]}</div>', unsafe_allow_html=True)
+    with st.form("b_form"):
+        col_a, col_b = st.columns(2)
+        n_v = col_a.text_input(t["name"])
+        s_v = col_a.text_input(t["surname"])
+        m_v = col_b.text_input(t["email"])
+        p_v = col_b.text_input(t["phone"])
+        h_v = st.slider(t["hours"], 1, 8, 2)
+        st.write(f"**Total: {h_v * 3} €**")
+        if st.form_submit_button(t["booking_confirm"]):
+            if not n_v or not s_v or not m_v or not p_v:
+                st.error(t["booking_error"])
+            else:
+                st.success(t["booking_ok"])
+                st.balloons()
     st.markdown("</div>", unsafe_allow_html=True)
