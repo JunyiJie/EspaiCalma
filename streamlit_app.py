@@ -235,7 +235,6 @@ with tabs[5]:
             localizacion = st.selectbox(t["loc"], [
                 "EEBE - Campus Besòs (UPC)", 
                 "Zona Universitària - Les Corts", 
-                "Eixample Dret"
             ])
             # Añadido el Tipo de Servicio
             tipo_servicio = st.selectbox(t["space"], [
