@@ -1,235 +1,424 @@
+# app.py — EspaiCalma (Streamlit) HTML/CSS (mockup) + Reserva con datos completos + aviso + letras grandes y alto contraste
+# Ejecuta: streamlit run app.py
+
 import streamlit as st
 from datetime import date
 
 st.set_page_config(page_title="EspaiCalma", page_icon="🧘", layout="wide")
 
 # ---------------------------
-# ESTADO
+# CONFIG
 # ---------------------------
-if "lang" not in st.session_state:
-    st.session_state.lang = "CAT"
+PAGES = ["inici", "espais", "faqs", "sobre", "contacte", "reserva"]
+LANGS = ["CAT", "ESP", "ENG"]
+
+BG = "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=2400&q=70"
 
 # ---------------------------
-# TEXTOS (CAT/ESP/ENG)
+# HELPERS: query params
+# ---------------------------
+def qp_get(key, default=None):
+    try:
+        return st.query_params.get(key, default)
+    except Exception:
+        return default
+
+def qp_set(**kwargs):
+    try:
+        st.query_params.update(kwargs)
+    except Exception:
+        pass
+
+# ---------------------------
+# ESTADO
+# ---------------------------
+if "page" not in st.session_state:
+    st.session_state.page = qp_get("page", "inici")
+if "lang" not in st.session_state:
+    st.session_state.lang = qp_get("lang", "CAT")
+
+# refrescar desde query params (click HTML)
+st.session_state.page = qp_get("page", st.session_state.page)
+st.session_state.lang = qp_get("lang", st.session_state.lang)
+
+# normalizar
+st.session_state.page = st.session_state.page if st.session_state.page in PAGES else "inici"
+st.session_state.lang = st.session_state.lang if st.session_state.lang in LANGS else "CAT"
+qp_set(page=st.session_state.page, lang=st.session_state.lang)
+
+# ---------------------------
+# TEXTOS
 # ---------------------------
 TXT = {
     "CAT": {
-        "welcome": "Benvingut/da a EspaiCalma",
-        "subtitle": "Espais tranquils i còmodes per estudiar o treballar, reservables per hores des d’una app o web.",
-        "mvp": "MVP: demo de navegació + simulació de reserva (sense pagament real).",
-        "spaces_title": "Espais i Serveis",
-        "spaces_sub": "Tria l’espai que millor s’adapta a tu.",
-        "faqs_title": "FAQs",
-        "about_title": "Sobre Nosaltres",
-        "contact_title": "Contacte",
-        "booking_title": "Reserva",
-        "contact_send": "Enviar",
-        "booking_confirm": "Confirmar reserva",
-        "booking_ok": "✅ Reserva simulada (demo).",
-        "booking_info": "Aquesta acció pot comptar com a ‘reserva de prova’ per a les mètriques de l’experiment.",
+        "brand": "Espai<span>Calma</span>",
+        "menu": {
+            "inici": "🏠  Inici",
+            "espais": "🌿  Espais i Serveis",
+            "faqs": "❓  FAQs",
+            "sobre": "ℹ️  Sobre Nosaltres",
+            "contacte": "✉️  Contacte",
+            "reserva": "🗓️  Reserva",
+        },
+        "inici": ("Benvingut/da a EspaiCalma",
+                  "Espais tranquils i còmodes per estudiar o treballar, reservables per hores des d’una app o web.",
+                  "MVP: demo de navegació + simulació de reserva (sense pagament real)."),
+        "espais": ("Espais i Serveis", "Tria l’espai que millor s’adapta a tu."),
+        "faqs": ("FAQs", "Respostes ràpides als dubtes més freqüents."),
+        "sobre": ("Sobre Nosaltres", "EspaiCalma neix per facilitar concentració, productivitat i benestar."),
+        "contacte": ("Contacte", "Envia’ns un missatge i et respondrem."),
+        "reserva": ("Reserva", "Completa les dades i confirma la reserva (demo). Sense pagament real."),
+        "pricing": "Tarifes",
+        "send": "Enviar",
+        "msg_sent": "Missatge enviat (demo).",
+        "confirm": "Confirmar reserva",
+        "ok": "✅ Reserva simulada (demo).",
         "loc": "Ubicació",
         "space": "Espai",
-        "date": "Data",
+        "dt": "Data",
         "hours": "Hores",
         "price": "Preu estimat",
         "name": "Nom",
-        "message": "Missatge",
-        "pricing": "Tarifes",
-        "faq1": "Com funciona la reserva?",
-        "faq1a": "Selecciona ubicació, data i hores. Confirma i reps una confirmació (demo).",
-        "faq2": "Hi ha horaris nocturns?",
-        "faq2a": "En fase pilot es poden ampliar horaris en períodes d’exàmens segons demanda.",
-        "faq3": "Què inclou l’espai?",
-        "faq3a": "Wi-Fi, taula, cadira ergonòmica, endolls i ambient tranquil.",
-        "about1": "Projecte orientat a estudiants i joves professionals que necessiten concentració fora de casa.",
-        "about2": "Objectiu: reduir soroll i distraccions i facilitar una reserva simple i ràpida.",
-        "contact_ok": "Missatge enviat (demo).",
+        "surname": "Cognoms",
+        "email": "Correu electrònic",
+        "phone": "Telèfon",
+        "notice_title": "Avís important",
+        "notice": "Si passats 10 minuts de l’hora d’inici no hi ha ningú a l’aula, la reserva es cancel·larà automàticament.",
     },
     "ESP": {
-        "welcome": "Bienvenido/a a EspaiCalma",
-        "subtitle": "Espacios tranquilos y cómodos para estudiar o trabajar, reservables por horas desde una app o web.",
-        "mvp": "MVP: demo de navegación + simulación de reserva (sin pago real).",
-        "spaces_title": "Espacios y Servicios",
-        "spaces_sub": "Elige el espacio que mejor se adapte a ti.",
-        "faqs_title": "FAQs",
-        "about_title": "Sobre Nosotros",
-        "contact_title": "Contacto",
-        "booking_title": "Reserva",
-        "contact_send": "Enviar",
-        "booking_confirm": "Confirmar reserva",
-        "booking_ok": "✅ Reserva simulada (demo).",
-        "booking_info": "Esta acción puede contar como ‘reserva de prueba’ para las métricas del experimento.",
+        "brand": "Espai<span>Calma</span>",
+        "menu": {
+            "inici": "🏠  Inicio",
+            "espais": "🌿  Espacios y Servicios",
+            "faqs": "❓  FAQs",
+            "sobre": "ℹ️  Sobre Nosotros",
+            "contacte": "✉️  Contacto",
+            "reserva": "🗓️  Reserva",
+        },
+        "inici": ("Bienvenido/a a EspaiCalma",
+                  "Espacios tranquilos y cómodos para estudiar o trabajar, reservables por horas desde una app o web.",
+                  "MVP: demo de navegación + simulación de reserva (sin pago real)."),
+        "espais": ("Espacios y Servicios", "Elige el espacio que mejor se adapte a ti."),
+        "faqs": ("FAQs", "Respuestas rápidas a las dudas más frecuentes."),
+        "sobre": ("Sobre Nosotros", "EspaiCalma nace para mejorar concentración, productividad y bienestar."),
+        "contacte": ("Contacto", "Envíanos un mensaje y te respondemos."),
+        "reserva": ("Reserva", "Completa tus datos y confirma la reserva (demo). Sin pago real."),
+        "pricing": "Tarifas",
+        "send": "Enviar",
+        "msg_sent": "Mensaje enviado (demo).",
+        "confirm": "Confirmar reserva",
+        "ok": "✅ Reserva simulada (demo).",
         "loc": "Ubicación",
         "space": "Espacio",
-        "date": "Fecha",
+        "dt": "Fecha",
         "hours": "Horas",
         "price": "Precio estimado",
         "name": "Nombre",
-        "message": "Mensaje",
-        "pricing": "Tarifas",
-        "faq1": "¿Cómo funciona la reserva?",
-        "faq1a": "Selecciona ubicación, fecha y horas. Confirma y recibes una confirmación (demo).",
-        "faq2": "¿Hay horarios nocturnos?",
-        "faq2a": "En fase piloto se pueden ampliar horarios en periodos de exámenes según demanda.",
-        "faq3": "¿Qué incluye el espacio?",
-        "faq3a": "Wi-Fi, mesa, silla ergonómica, enchufes y ambiente tranquilo.",
-        "about1": "Proyecto orientado a estudiantes y jóvenes profesionales que necesitan concentración fuera de casa.",
-        "about2": "Objetivo: reducir ruido y distracciones y facilitar una reserva simple y rápida.",
-        "contact_ok": "Mensaje enviado (demo).",
+        "surname": "Apellidos",
+        "email": "Correo electrónico",
+        "phone": "Teléfono",
+        "notice_title": "Aviso importante",
+        "notice": "Si pasados 10 minutos de la hora de inicio no hay nadie en el aula, la reserva se cancelará automáticamente.",
     },
     "ENG": {
-        "welcome": "Welcome to EspaiCalma",
-        "subtitle": "Quiet, comfortable spaces to study or work, bookable by the hour from an app or web.",
-        "mvp": "MVP: navigation demo + booking simulation (no real payment).",
-        "spaces_title": "Spaces & Services",
-        "spaces_sub": "Pick the space that fits you best.",
-        "faqs_title": "FAQs",
-        "about_title": "About Us",
-        "contact_title": "Contact",
-        "booking_title": "Booking",
-        "contact_send": "Send",
-        "booking_confirm": "Confirm booking",
-        "booking_ok": "✅ Booking simulated (demo).",
-        "booking_info": "This action can count as a ‘test booking’ for your experiment metrics.",
+        "brand": "Espai<span>Calma</span>",
+        "menu": {
+            "inici": "🏠  Home",
+            "espais": "🌿  Spaces & Services",
+            "faqs": "❓  FAQs",
+            "sobre": "ℹ️  About Us",
+            "contacte": "✉️  Contact",
+            "reserva": "🗓️  Booking",
+        },
+        "inici": ("Welcome to EspaiCalma",
+                  "Quiet, comfortable spaces to study or work, bookable by the hour from an app or web.",
+                  "MVP: navigation demo + booking simulation (no real payment)."),
+        "espais": ("Spaces & Services", "Pick the space that fits you best."),
+        "faqs": ("FAQs", "Quick answers to common questions."),
+        "sobre": ("About Us", "EspaiCalma helps people focus, be productive, and feel calm."),
+        "contacte": ("Contact", "Send us a message and we’ll get back to you."),
+        "reserva": ("Booking", "Fill in your details and confirm (demo). No real payment."),
+        "pricing": "Pricing",
+        "send": "Send",
+        "msg_sent": "Message sent (demo).",
+        "confirm": "Confirm booking",
+        "ok": "✅ Booking simulated (demo).",
         "loc": "Location",
         "space": "Space",
-        "date": "Date",
+        "dt": "Date",
         "hours": "Hours",
         "price": "Estimated price",
-        "name": "Name",
-        "message": "Message",
-        "pricing": "Pricing",
-        "faq1": "How does booking work?",
-        "faq1a": "Choose location, date and hours. Confirm and get a demo confirmation.",
-        "faq2": "Do you offer night hours?",
-        "faq2a": "During the pilot, hours can be extended in exam periods depending on demand.",
-        "faq3": "What's included?",
-        "faq3a": "Wi-Fi, desk, ergonomic chair, power outlets, and a quiet atmosphere.",
-        "about1": "A project for students and young professionals who need focus outside home.",
-        "about2": "Goal: reduce noise/distractions and make booking simple and fast.",
-        "contact_ok": "Message sent (demo).",
+        "name": "First name",
+        "surname": "Last name",
+        "email": "Email",
+        "phone": "Phone",
+        "notice_title": "Important notice",
+        "notice": "If no one is in the room 10 minutes after the start time, the booking will be automatically cancelled.",
     },
 }
 
-# ---------------------------
-# ESTILO (mockup)
-# ---------------------------
-BG = "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=2400&q=70"
+lang = st.session_state.lang
+t = TXT[lang]
+page = st.session_state.page
 
+# ---------------------------
+# CSS (letras más grandes + alto contraste)
+# ---------------------------
 st.markdown(
     f"""
 <style>
-/* Fondo */
+/* Ocultar UI Streamlit */
+header, footer {{ visibility: hidden; }}
+#MainMenu {{ visibility: hidden; }}
+
+/* Fondo más suave */
 .stApp {{
   background:
-    linear-gradient(rgba(0,0,0,.34), rgba(0,0,0,.34)),
+    linear-gradient(rgba(0,0,0,.16), rgba(0,0,0,.16)),
     url("{BG}");
   background-size: cover;
   background-position: center;
 }}
 
-/* Ocultar barra de Streamlit */
-header {{visibility:hidden;}}
-#MainMenu {{visibility:hidden;}}
-footer {{visibility:hidden;}}
+/* Tipografía base grande */
+html, body, [class*="css"] {{
+  font-size: 20px !important;
+  color: #0f1419 !important;
+}}
 
-/* Contenedor centrado */
+/* Layout */
 .ec-wrap {{
-  max-width: 1200px;
-  margin: 50px auto;
-  padding: 0 30px;
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 22px;
+  align-items: start;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 10px 10px;
 }}
 
-/* Título estilo portada */
-.ec-hero-title {{
-  font-size: 66px;
+/* Panel */
+.ec-panel {{
+  background: rgba(255,255,255,.97);
+  border-radius: 18px;
+  box-shadow: 0 18px 55px rgba(0,0,0,.22);
+  overflow: hidden;
+}}
+.ec-panel-inner {{
+  padding: 24px 18px 18px 18px;
+}}
+.ec-brand {{
+  font-size: 60px;
   font-weight: 1000;
-  color: white;
-  margin: 0 0 6px 0;
-  text-shadow: 0 10px 30px rgba(0,0,0,.35);
+  color: #11161c;
+  line-height: 1;
+  margin-bottom: 14px;
 }}
-.ec-hero-sub {{
-  font-size: 30px;
-  color: rgba(255,255,255,.92);
-  margin: 0 0 20px 0;
-  text-shadow: 0 10px 30px rgba(0,0,0,.35);
-}}
+.ec-brand span {{ color: #c9ad78; }}
 
-/* Tarjeta blanca translúcida */
-.ec-card {{
-  background: rgba(255,255,255,.88);
-  border-radius: 16px;
-  box-shadow: 0 18px 55px rgba(0,0,0,.18);
-  padding: 22px 24px;
+/* Idiomas */
+.ec-lang {{
+  display: flex;
+  gap: 12px;
+  margin: 6px 0 10px 0;
 }}
-
-/* Tabs como botones */
-.stTabs [data-baseweb="tab-list"] {{
-  gap: 10px;
-  flex-wrap: wrap;
-}}
-.stTabs [data-baseweb="tab"] {{
-  background: rgba(0,0,0,.30);
+.ec-pill {{
+  flex: 1;
+  border: 0;
+  background: rgba(0,0,0,.10);
+  color: #11161c;
+  padding: 14px 0;
   border-radius: 14px;
-  padding: 10px 14px;
-  color: white;
-  border: 1px solid rgba(255,255,255,.12);
-}}
-.stTabs [aria-selected="true"] {{
-  background: rgba(201,173,120,.95);
-  color: #1b1f24;
-  border: 1px solid rgba(0,0,0,.06);
   font-weight: 1000;
+  font-size: 16px;
+  cursor: pointer;
+}}
+.ec-pill.active {{
+  background: rgba(17,22,28,.96);
+  color: #fff;
 }}
 
-/* Botones idioma compactos */
-.ec-lang button {{
-  border-radius: 12px !important;
-  font-weight: 800 !important;
+/* Botones menú */
+.ec-btn {{
+  width: 100%;
+  border: 0;
+  background: #2b2f35;
+  color: #fff;
+  padding: 18px 16px;
+  border-radius: 14px;
+  font-weight: 1000;
+  font-size: 20px;
+  text-align: left;
+  margin: 12px 0;
+  cursor: pointer;
+}}
+.ec-btn:hover {{ filter: brightness(1.08); }}
+.ec-btn.active {{
+  outline: 4px solid rgba(201,173,120,.65);
+  box-shadow: 0 0 0 4px rgba(201,173,120,.16);
+}}
+
+/* CTA Reserva */
+.ec-cta {{
+  width: 100%;
+  border: 0;
+  background: #ea5a53;
+  color: #fff;
+  padding: 20px 16px;
+  border-radius: 16px;
+  font-weight: 1000;
+  font-size: 22px;
+  text-align: center;
+  margin: 18px 0 10px 0;
+  cursor: pointer;
+}}
+.ec-cta:hover {{ filter: brightness(1.05); }}
+
+/* Social */
+.ec-social {{
+  display:flex;
+  gap: 10px;
+  margin-top: 12px;
+}}
+.ec-ico {{
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: rgba(0,0,0,.08);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  color: #11161c;
+  font-weight: 1000;
+}}
+.ec-ico:hover {{ background: rgba(201,173,120,.22); }}
+
+/* Main */
+.ec-main {{
+  background: rgba(255,255,255,.95);
+  border-radius: 18px;
+  box-shadow: 0 18px 55px rgba(0,0,0,.20);
+  padding: 30px 32px;
+  min-height: 700px;
+}}
+.ec-h1 {{
+  font-size: 58px;
+  font-weight: 1000;
+  margin: 0 0 10px 0;
+  color: #0f1419;
+}}
+.ec-sub {{
+  margin: 0 0 18px 0;
+  color: #2c3742;
+  font-size: 22px;
+  font-weight: 800;
+}}
+.ec-chip {{
+  display: inline-block;
+  background: rgba(43,47,53,.10);
+  color: #11161c;
+  padding: 14px 16px;
+  border-radius: 14px;
+  font-weight: 1000;
+  font-size: 16px;
+  margin: 8px 0 18px 0;
+}}
+
+/* Aviso destacado */
+.ec-notice {{
+  background: rgba(234,90,83,.12);
+  border: 2px solid rgba(234,90,83,.35);
+  color: #11161c;
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin: 8px 0 18px 0;
+}}
+.ec-notice-title {{
+  font-weight: 1000;
+  font-size: 18px;
+  margin-bottom: 6px;
+}}
+
+/* Inputs más grandes */
+.stTextInput input, .stTextArea textarea {{
+  font-size: 20px !important;
 }}
 </style>
 """,
-    unsafe_allow_html=True,
+    unsafe_allow_html=True
 )
 
 # ---------------------------
-# HEADER + IDIOMA
+# HTML helpers (forms GET)
 # ---------------------------
-lang = st.session_state.lang
-t = TXT[lang]
+def menu_button(label, page_key, active=False, cta=False):
+    cls = "ec-cta" if cta else ("ec-btn active" if active else "ec-btn")
+    return f"""
+<form action="" method="get">
+  <input type="hidden" name="page" value="{page_key}">
+  <input type="hidden" name="lang" value="{st.session_state.lang}">
+  <button class="{cls}" type="submit">{label}</button>
+</form>
+"""
 
+def lang_button(code, active=False):
+    cls = "ec-pill active" if active else "ec-pill"
+    return f"""
+<form action="" method="get" style="flex:1;">
+  <input type="hidden" name="page" value="{st.session_state.page}">
+  <input type="hidden" name="lang" value="{code}">
+  <button class="{cls}" type="submit">{code}</button>
+</form>
+"""
+
+# ---------------------------
+# RENDER
+# ---------------------------
 st.markdown('<div class="ec-wrap">', unsafe_allow_html=True)
 
-c1, c2, c3, _ = st.columns([1, 1, 1, 6])
-with c1:
-    if st.button("CAT", use_container_width=True, key="lang_cat"):
-        st.session_state.lang = "CAT"
-with c2:
-    if st.button("ESP", use_container_width=True, key="lang_esp"):
-        st.session_state.lang = "ESP"
-with c3:
-    if st.button("ENG", use_container_width=True, key="lang_eng"):
-        st.session_state.lang = "ENG"
+# LEFT PANEL
+left_html = f"""
+<div class="ec-panel">
+  <div class="ec-panel-inner">
+    <div class="ec-brand">{t["brand"]}</div>
 
-lang = st.session_state.lang
-t = TXT[lang]
+    <div class="ec-lang">
+      {lang_button("CAT", st.session_state.lang=="CAT")}
+      {lang_button("ESP", st.session_state.lang=="ESP")}
+      {lang_button("ENG", st.session_state.lang=="ENG")}
+    </div>
 
-st.markdown(f'<div class="ec-hero-title">{t["welcome"]}</div>', unsafe_allow_html=True)
-st.markdown(f'<div class="ec-hero-sub">{t["subtitle"]}</div>', unsafe_allow_html=True)
+    {menu_button(t["menu"]["inici"], "inici", active=page=="inici")}
+    {menu_button(t["menu"]["espais"], "espais", active=page=="espais")}
+    {menu_button(t["menu"]["faqs"], "faqs", active=page=="faqs")}
+    {menu_button(t["menu"]["sobre"], "sobre", active=page=="sobre")}
+    {menu_button(t["menu"]["contacte"], "contacte", active=page=="contacte")}
+
+    {menu_button(t["menu"]["reserva"], "reserva", active=page=="reserva", cta=True)}
+
+    <div class="ec-social">
+      <a class="ec-ico" href="https://instagram.com" target="_blank" title="Instagram">IG</a>
+      <a class="ec-ico" href="https://x.com" target="_blank" title="X">X</a>
+      <a class="ec-ico" href="https://linkedin.com" target="_blank" title="LinkedIn">in</a>
+    </div>
+  </div>
+</div>
+"""
+st.markdown(left_html, unsafe_allow_html=True)
+
+# MAIN
+st.markdown('<div class="ec-main">', unsafe_allow_html=True)
 
 # ---------------------------
-# NAVEGACIÓN (pestañas SIEMPRE visibles)
+# CONTENT
 # ---------------------------
-tab_inici, tab_spaces, tab_faqs, tab_about, tab_contact, tab_booking = st.tabs(
-    ["🏠 Inici", "🌿 Espais i Serveis", "❓ FAQs", "ℹ️ Sobre", "✉️ Contacte", "🗓️ Reserva"]
-)
+if page == "inici":
+    h1, sub, chip = t["inici"]
+    st.markdown(f'<div class="ec-h1">{h1}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="ec-sub">{sub}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="ec-chip">{chip}</div>', unsafe_allow_html=True)
 
-# ---------------------------
-# CONTENIDO
-# ---------------------------
-with tab_inici:
-    st.markdown('<div class="ec-card">', unsafe_allow_html=True)
-    st.info(t["mvp"])
     st.write(
         "• Wi-Fi estable\n• Silenci real\n• Taula + cadira ergonòmica\n• Reserva ràpida"
         if lang == "CAT"
@@ -237,94 +426,134 @@ with tab_inici:
         if lang == "ESP"
         else "• Stable Wi-Fi\n• Real quiet\n• Desk + ergonomic chair\n• Fast booking"
     )
-    st.markdown("</div>", unsafe_allow_html=True)
 
-with tab_spaces:
-    st.markdown('<div class="ec-card">', unsafe_allow_html=True)
-    st.subheader(t["spaces_title"])
-    st.caption(t["spaces_sub"])
+elif page == "espais":
+    h1, sub = t["espais"]
+    st.markdown(f'<div class="ec-h1">{h1}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="ec-sub">{sub}</div>', unsafe_allow_html=True)
 
-    a, b, c = st.columns(3)
-    with a:
-        st.image(
-            "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=900&q=70",
-            caption="Sala privada (1)",
-        )
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        st.image("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=900&q=70",
+                 caption="Sala privada (1)")
         st.caption("Wi-Fi • Silenci • Endolls" if lang != "ENG" else "Wi-Fi • Quiet • Outlets")
-    with b:
-        st.image(
-            "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=900&q=70",
-            caption="Sala petita (2)",
-        )
+    with c2:
+        st.image("https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=900&q=70",
+                 caption="Sala petita (2)")
         st.caption("Ideal per reunions" if lang == "CAT" else "Ideal para reuniones" if lang == "ESP" else "Great for meetings")
-    with c:
-        st.image(
-            "https://images.unsplash.com/photo-1449247709967-d4461a6a6103?auto=format&fit=crop&w=900&q=70",
-            caption="Llum natural" if lang == "CAT" else "Luz natural" if lang == "ESP" else "Natural light",
-        )
+    with c3:
+        st.image("https://images.unsplash.com/photo-1449247709967-d4461a6a6103?auto=format&fit=crop&w=900&q=70",
+                 caption="Llum natural" if lang == "CAT" else "Luz natural" if lang == "ESP" else "Natural light")
         st.caption("Ventilació • Confort" if lang == "CAT" else "Ventilación • Confort" if lang == "ESP" else "Ventilation • Comfort")
 
     st.subheader(t["pricing"])
+    st.write("• 3 € / hora\n• 30 € / mes" if lang != "ENG" else "• 3 € / hour\n• 30 € / month")
+
+elif page == "faqs":
+    h1, sub = t["faqs"]
+    st.markdown(f'<div class="ec-h1">{h1}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="ec-sub">{sub}</div>', unsafe_allow_html=True)
+
+    with st.expander("Com funciona la reserva?" if lang=="CAT" else "¿Cómo funciona la reserva?" if lang=="ESP" else "How does booking work?"):
+        st.write("Selecciona ubicació, data i hores i confirma (demo)." if lang=="CAT"
+                 else "Selecciona ubicación, fecha y horas y confirma (demo)." if lang=="ESP"
+                 else "Pick location, date and hours, then confirm (demo).")
+
+elif page == "sobre":
+    h1, sub = t["sobre"]
+    st.markdown(f'<div class="ec-h1">{h1}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="ec-sub">{sub}</div>', unsafe_allow_html=True)
     st.write(
-        "• 3 € / hora\n• 30 € / mes (accés il·limitat a certs espais)"
+        "Projecte orientat a estudiants i joves professionals que necessiten concentració fora de casa."
         if lang == "CAT"
-        else "• 3 € / hora\n• 30 € / mes (acceso ilimitado a ciertos espacios)"
+        else "Proyecto orientado a estudiantes y jóvenes profesionales que necesitan concentración fuera de casa."
         if lang == "ESP"
-        else "• 3 € / hour\n• 30 € / month (unlimited access to selected spaces)"
+        else "A project for students and young professionals who need focus outside home."
     )
-    st.markdown("</div>", unsafe_allow_html=True)
 
-with tab_faqs:
-    st.markdown('<div class="ec-card">', unsafe_allow_html=True)
-    st.subheader(t["faqs_title"])
-    with st.expander(t["faq1"]):
-        st.write(t["faq1a"])
-    with st.expander(t["faq2"]):
-        st.write(t["faq2a"])
-    with st.expander(t["faq3"]):
-        st.write(t["faq3a"])
-    st.markdown("</div>", unsafe_allow_html=True)
+elif page == "contacte":
+    h1, sub = t["contacte"]
+    st.markdown(f'<div class="ec-h1">{h1}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="ec-sub">{sub}</div>', unsafe_allow_html=True)
 
-with tab_about:
-    st.markdown('<div class="ec-card">', unsafe_allow_html=True)
-    st.subheader(t["about_title"])
-    st.write(t["about1"])
-    st.write(t["about2"])
-    st.markdown("</div>", unsafe_allow_html=True)
-
-with tab_contact:
-    st.markdown('<div class="ec-card">', unsafe_allow_html=True)
-    st.subheader(t["contact_title"])
     with st.form("contact_form"):
         st.text_input(t["name"])
         st.text_input("Email")
         st.text_area(t["message"])
-        sent = st.form_submit_button(t["contact_send"])
+        sent = st.form_submit_button(t["send"])
     if sent:
-        st.success(t["contact_ok"])
-    st.markdown("</div>", unsafe_allow_html=True)
+        st.success(t["msg_sent"])
 
-with tab_booking:
-    st.markdown('<div class="ec-card">', unsafe_allow_html=True)
-    st.subheader(t["booking_title"])
+elif page == "reserva":
+    h1, sub = t["reserva"]
+    st.markdown(f'<div class="ec-h1">{h1}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="ec-sub">{sub}</div>', unsafe_allow_html=True)
+
+    # Aviso de cancelación
+    st.markdown(
+        f"""
+<div class="ec-notice">
+  <div class="ec-notice-title">{t["notice_title"]}</div>
+  <div>{t["notice"]}</div>
+</div>
+""",
+        unsafe_allow_html=True
+    )
 
     with st.form("booking_form"):
+        # Datos personales obligatorios
+        colA, colB = st.columns(2)
+        with colA:
+            first_name = st.text_input(t["name"])
+        with colB:
+            last_name = st.text_input(t["surname"])
+
+        colC, colD = st.columns(2)
+        with colC:
+            email = st.text_input(t["email"])
+        with colD:
+            phone = st.text_input(t["phone"], placeholder="+34 600 000 000")
+
+        st.divider()
+
+        # Datos de la reserva
         loc = st.selectbox(t["loc"], ["Eixample", "Gràcia", "Sants", "Poblenou"])
         sp = st.selectbox(t["space"], ["Sala privada (1)", "Sala petita (2)", "Llum natural"])
-        st.date_input(t["date"], value=date.today())
+        st.date_input(t["dt"], value=date.today())
         h = st.slider(t["hours"], 1, 8, 2)
 
-        price_per_hour = 3
-        st.write(f'{t["price"]}: **{h * price_per_hour} €** ({price_per_hour} €/hora)' if lang != "ENG"
-                 else f'{t["price"]}: **{h * price_per_hour} €** ({price_per_hour} €/hour)')
+        price = 3
+        st.markdown(
+            f"**{t['price']}:** {h*price} € ({price} €/hora)" if lang != "ENG"
+            else f"**{t['price']}:** {h*price} € ({price} €/hour)"
+        )
 
-        ok = st.form_submit_button(t["booking_confirm"])
+        ok = st.form_submit_button(t["confirm"])
 
     if ok:
-        st.success(t["booking_ok"])
-        st.info(t["booking_info"])
+        # Validación simple
+        missing = []
+        if not first_name.strip():
+            missing.append(t["name"])
+        if not last_name.strip():
+            missing.append(t["surname"])
+        if not email.strip():
+            missing.append(t["email"])
+        if not phone.strip():
+            missing.append(t["phone"])
 
-    st.markdown("</div>", unsafe_allow_html=True)
+        if missing:
+            st.error(("Falten camps obligatoris: " if lang == "CAT"
+                      else "Faltan campos obligatorios: " if lang == "ESP"
+                      else "Missing required fields: ") + ", ".join(missing))
+        else:
+            st.success(t["ok"])
+            st.info(
+                (f"Dades: {first_name} {last_name} · {email} · {phone}"
+                 if lang != "ENG" else
+                 f"Details: {first_name} {last_name} · {email} · {phone}")
+            )
 
-st.markdown("</div>", unsafe_allow_html=True)
-
+# cerrar MAIN y WRAP
+st.markdown("</div>", unsafe_allow_html=True)  # ec-main
+st.markdown("</div>", unsafe_allow_html=True)  # ec-wrap
