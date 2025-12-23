@@ -1,6 +1,6 @@
 import streamlit as st
 from datetime import date
-import re  # Importamos para validar el formato de email
+import re
 
 # Función auxiliar para validar email
 def is_valid_email(email):
@@ -37,7 +37,7 @@ TXT = {
         "booking_ok": "✅ Reserva simulada amb èxit!",
         "booking_error": "❌ Error: Emplena tots els camps correctament.",
         "email_error": "❌ Error: Introdueix un correu electrònic vàlid.",
-        "phone_error": "❌ Error: El telèfon només pot contenir números.",
+        "phone_error": "❌ Error: El telèfon ha de tenir 9 xifres (Espanya).",
         "contact_error": "❌ Error: Introdueix el teu correu electrònic.",
         "cancel_warning": "⚠️ Avís: Si passats 10 minuts de la reserva no hi ha ningú, es cancel·larà.",
         "loc": "Ubicació",
@@ -48,7 +48,7 @@ TXT = {
         "name": "Nom",
         "surname": "Cognoms",
         "email": "Email",
-        "phone": "Telèfon (només números)",
+        "phone": "Telèfon (9 xifres)",
         "pricing": "Tarifes",
         "team_title": "Equip Directiu",
         "faq1": "Com funciona?", "faq1a": "Selecciona espai, data i confirma dades.",
@@ -70,7 +70,7 @@ TXT = {
         "booking_ok": "✅ ¡Reserva simulada con éxito!",
         "booking_error": "❌ Error: Rellena todos los campos correctamente.",
         "email_error": "❌ Error: Introduce un correo electrónico válido.",
-        "phone_error": "❌ Error: El teléfono solo puede contener números.",
+        "phone_error": "❌ Error: El teléfono debe tener 9 cifras (España).",
         "contact_error": "❌ Error: Introduce tu email.",
         "cancel_warning": "⚠️ Aviso: Si pasados 10 minutos de la reserva no hay nadie, se cancelará.",
         "loc": "Ubicación",
@@ -81,7 +81,7 @@ TXT = {
         "name": "Nombre",
         "surname": "Apellidos",
         "email": "Email",
-        "phone": "Teléfono (solo números)",
+        "phone": "Teléfono (9 cifras)",
         "pricing": "Tarifas",
         "team_title": "Equipo Directivo",
         "faq1": "¿Cómo funciona?", "faq1a": "Selecciona espacio, fecha y confirma datos.",
@@ -103,7 +103,7 @@ TXT = {
         "booking_ok": "✅ Booking simulated successfully!",
         "booking_error": "❌ Error: Fill in all fields correctly.",
         "email_error": "❌ Error: Please enter a valid email address.",
-        "phone_error": "❌ Error: Phone must contain only numbers.",
+        "phone_error": "❌ Error: Phone must be 9 digits (Spain).",
         "contact_error": "❌ Error: Please enter your email.",
         "cancel_warning": "⚠️ Notice: If no one is present 10 min after the booking, it will be cancelled.",
         "loc": "Location",
@@ -114,7 +114,7 @@ TXT = {
         "name": "First Name",
         "surname": "Last Name",
         "email": "Email",
-        "phone": "Phone (numbers only)",
+        "phone": "Phone (9 digits)",
         "pricing": "Pricing",
         "team_title": "Management Team",
         "faq1": "How it works?", "faq1a": "Select space, date and confirm your details.",
@@ -233,7 +233,7 @@ with tabs[4]:
     with st.expander(t["faq2"]): st.write(t["faq2a"])
     st.markdown("</div>", unsafe_allow_html=True)
 
-# --- TAB CONTACTE (CON VALIDACIÓN DE EMAIL) ---
+# --- TAB CONTACTE ---
 with tabs[5]:
     st.markdown('<div class="ec-card">', unsafe_allow_html=True)
     st.subheader(t["contact_title"])
@@ -250,7 +250,7 @@ with tabs[5]:
                 st.success("Sent!")
     st.markdown("</div>", unsafe_allow_html=True)
 
-# --- TAB RESERVA (CON VALIDACIÓN DE EMAIL Y TELÉFONO) ---
+# --- TAB RESERVA ---
 with tabs[6]:
     st.markdown('<div class="ec-card">', unsafe_allow_html=True)
     st.subheader(t["booking_title"])
@@ -262,6 +262,7 @@ with tabs[6]:
         n_v = col_a.text_input(t["name"])
         s_v = col_a.text_input(t["surname"])
         m_v = col_b.text_input(t["email"])
+        # Campo de teléfono con instrucción de 9 cifras
         p_v = col_b.text_input(t["phone"])
         
         st.divider()
@@ -281,7 +282,8 @@ with tabs[6]:
                 st.error(t["booking_error"])
             elif not is_valid_email(m_v):
                 st.error(t["email_error"])
-            elif not p_v.isdigit():
+            # VALIDACIÓN: Debe ser numérico Y tener exactamente 9 caracteres
+            elif not p_v.isdigit() or len(p_v) != 9:
                 st.error(t["phone_error"])
             else:
                 st.success(f"{t['booking_ok']} - {localizacion}")
