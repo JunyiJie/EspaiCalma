@@ -24,13 +24,13 @@ TXT = {
         "about_title": "Sobre Nosaltres",
         "contact_title": "Contacte",
         "booking_title": "Reserva el teu espai",
+        "rules_title": "Normativa de l'Espai",
         "contact_send": "Enviar Missatge",
         "booking_confirm": "Confirmar reserva",
         "booking_ok": "✅ Reserva simulada amb èxit!",
         "booking_error": "❌ Error: Emplena tots els camps correctament.",
         "phone_error": "❌ Error: El telèfon només pot contenir números.",
         "contact_error": "❌ Error: Introdueix el teu correu electrònic.",
-        "booking_info": "Aquesta acció ens ajuda a mesurar l'interès del projecte.",
         "cancel_warning": "⚠️ Avís: Si passats 10 minuts de la reserva no hi ha ningú, es cancel·larà.",
         "loc": "Ubicació",
         "space": "Tipus de Servei",
@@ -56,13 +56,13 @@ TXT = {
         "about_title": "Sobre Nosotros",
         "contact_title": "Contacto",
         "booking_title": "Reserva tu espacio",
+        "rules_title": "Normativa del Espacio",
         "contact_send": "Enviar Mensaje",
         "booking_confirm": "Confirmar reserva",
         "booking_ok": "✅ ¡Reserva simulada con éxito!",
         "booking_error": "❌ Error: Rellena todos los campos correctamente.",
         "phone_error": "❌ Error: El teléfono solo puede contener números.",
         "contact_error": "❌ Error: Introduce tu email.",
-        "booking_info": "Esta acción nos ayuda a medir el interés del proyecto.",
         "cancel_warning": "⚠️ Aviso: Si pasados 10 minutos de la reserva no hay nadie, se cancelará.",
         "loc": "Ubicación",
         "space": "Tipo de Servicio",
@@ -88,13 +88,13 @@ TXT = {
         "about_title": "About Us",
         "contact_title": "Contact",
         "booking_title": "Book your space",
+        "rules_title": "Space Regulations",
         "contact_send": "Send Message",
         "booking_confirm": "Confirm booking",
         "booking_ok": "✅ Booking simulated successfully!",
         "booking_error": "❌ Error: Fill in all fields correctly.",
         "phone_error": "❌ Error: Phone must contain only numbers.",
         "contact_error": "❌ Error: Please enter your email.",
-        "booking_info": "This action helps us measure project interest.",
         "cancel_warning": "⚠️ Notice: If no one is present 10 min after the booking, it will be cancelled.",
         "loc": "Location",
         "space": "Service Type",
@@ -133,6 +133,7 @@ st.markdown(f"""
     }}
     .team-card b {{ color: #1a1a1a !important; font-size: 1.2rem; }}
     .team-card span {{ color: #444 !important; }}
+    .rule-item {{ margin-bottom: 10px; padding-left: 20px; border-left: 3px solid #C9AD78; }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -153,7 +154,7 @@ t = TXT[lang]
 st.markdown(f'<h1 class="hero-title">{t["welcome"]}</h1>', unsafe_allow_html=True)
 st.markdown(f'<p class="hero-sub">{t["subtitle"]}</p>', unsafe_allow_html=True)
 
-tabs = st.tabs(["🏠 Inici", "🌿 Serveis", "👥 Equip", "❓ FAQs", "✉️ Contacte", "🗓️ Reserva"])
+tabs = st.tabs(["🏠 Inici", "🌿 Serveis", "👥 Equip", "📜 Normativa", "❓ FAQs", "✉️ Contacte", "🗓️ Reserva"])
 
 # --- TAB INICI ---
 with tabs[0]:
@@ -181,7 +182,18 @@ with tabs[1]:
     st.subheader(t["pricing"])
     st.write("3 € / hora")
     st.markdown("</div>", unsafe_allow_html=True)
-    
+
+# --- TAB EQUIP ---
+with tabs[2]:
+    st.markdown('<div class="ec-card">', unsafe_allow_html=True)
+    st.subheader(t["team_title"])
+    e1, e2, e3, e4 = st.columns(4)
+    e1.markdown('<div class="team-card"><b>Aleix Trogal</b><br><span>CEO & Estratègia</span></div>', unsafe_allow_html=True)
+    e2.markdown('<div class="team-card"><b>Eloi Gil</b><br><span>Marketing Manager</span></div>', unsafe_allow_html=True)
+    e3.markdown('<div class="team-card"><b>Marc Vidal</b><br><span>CFO & Finances</span></div>', unsafe_allow_html=True)
+    e4.markdown('<div class="team-card"><b>Junyi Jie</b><br><span>CTO & Design</span></div>', unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
+
 # --- NOVA TAB: NORMATIVA ---
 with tabs[3]:
     st.markdown('<div class="ec-card">', unsafe_allow_html=True)
@@ -202,20 +214,9 @@ with tabs[3]:
     
     st.warning("L'incompliment d'aquestes normes pot comportar la cancel·lació de la reserva sense dret a reemborsament.")
     st.markdown("</div>", unsafe_allow_html=True)
-    
-# --- TAB EQUIP ---
-with tabs[2]:
-    st.markdown('<div class="ec-card">', unsafe_allow_html=True)
-    st.subheader(t["team_title"])
-    e1, e2, e3, e4 = st.columns(4)
-    e1.markdown('<div class="team-card"><b>Aleix Trogal</b><br><span>CEO & Estratègia</span></div>', unsafe_allow_html=True)
-    e2.markdown('<div class="team-card"><b>Eloi Gil</b><br><span>Marketing Manager</span></div>', unsafe_allow_html=True)
-    e3.markdown('<div class="team-card"><b>Marc Vidal</b><br><span>CFO & Finances</span></div>', unsafe_allow_html=True)
-    e4.markdown('<div class="team-card"><b>Junyi Jie</b><br><span>CTO & Design</span></div>', unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
 
 # --- TAB FAQS ---
-with tabs[3]:
+with tabs[4]:
     st.markdown('<div class="ec-card">', unsafe_allow_html=True)
     st.subheader(t["faqs_title"])
     with st.expander(t["faq1"]): st.write(t["faq1a"])
@@ -223,7 +224,7 @@ with tabs[3]:
     st.markdown("</div>", unsafe_allow_html=True)
 
 # --- TAB CONTACTE ---
-with tabs[4]:
+with tabs[5]:
     st.markdown('<div class="ec-card">', unsafe_allow_html=True)
     st.subheader(t["contact_title"])
     with st.form("c_form"):
@@ -237,8 +238,8 @@ with tabs[4]:
                 st.success("Sent!")
     st.markdown("</div>", unsafe_allow_html=True)
 
-# --- TAB RESERVA (AMB VALIDACIÓ NUMÈRICA DE TELÈFON) ---
-with tabs[5]:
+# --- TAB RESERVA ---
+with tabs[6]:
     st.markdown('<div class="ec-card">', unsafe_allow_html=True)
     st.subheader(t["booking_title"])
     st.markdown(f'<div style="color:red; font-weight:bold; margin-bottom:15px;">{t["cancel_warning"]}</div>', unsafe_allow_html=True)
@@ -249,7 +250,6 @@ with tabs[5]:
         n_v = col_a.text_input(t["name"])
         s_v = col_a.text_input(t["surname"])
         m_v = col_b.text_input(t["email"])
-        # Campo de teléfono
         p_v = col_b.text_input(t["phone"])
         
         st.divider()
@@ -265,7 +265,6 @@ with tabs[5]:
         st.write(f"### {t['price']}: {h_v * 3} €")
         
         if st.form_submit_button(t["booking_confirm"], use_container_width=True):
-            # VALIDACIÓN: Todos los campos llenos y que el teléfono sea numérico
             if not n_v.strip() or not s_v.strip() or not m_v.strip() or not p_v.strip():
                 st.error(t["booking_error"])
             elif not p_v.isdigit():
