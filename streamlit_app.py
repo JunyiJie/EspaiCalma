@@ -1,255 +1,296 @@
-# app.py  (Streamlit)
-# Ejecuta:  streamlit run app.py
+# app.py — EspaiCalma (Streamlit) con pestañas visibles (sin depender del sidebar)
+# Ejecuta: streamlit run app.py
+
 import streamlit as st
+from datetime import date
 
-st.set_page_config(page_title="EspaiCalma MVP", page_icon="🧘", layout="wide")
+st.set_page_config(
+    page_title="EspaiCalma",
+    page_icon="🧘",
+    layout="wide",
+)
 
-# --- Estilos (sidebar como en la imagen) ---
+# ---------------------------
+# ESTADO
+# ---------------------------
+if "lang" not in st.session_state:
+    st.session_state.lang = "CAT"
+
+# ---------------------------
+# TEXTOS (i18n)
+# ---------------------------
+T = {
+    "CAT": {
+        "Inici": ("Benvingut/da a EspaiCalma", "Espais tranquils i còmodes per estudiar o treballar, reservables per hores."),
+        "Espais i Serveis": ("Espais i Serveis", "Tria l’espai que millor s’adapta a tu."),
+        "FAQs": ("FAQs", "Respostes ràpides als dubtes més freqüents."),
+        "Sobre Nosaltres": ("Sobre Nosaltres", "EspaiCalma neix per facilitar concentració, productivitat i benestar."),
+        "Contacte": ("Contacte", "Envia’ns un missatge i et respondrem."),
+        "Reserva": ("Reserva", "Simula una reserva (MVP). Sense pagament real."),
+    },
+    "ESP": {
+        "Inici": ("Bienvenido/a a EspaiCalma", "Espacios tranquilos y cómodos para estudiar o trabajar, reservables por horas."),
+        "Espais i Serveis": ("Espacios y Servicios", "Elige el espacio que mejor se adapte a ti."),
+        "FAQs": ("FAQs", "Respuestas rápidas a las dudas más frecuentes."),
+        "Sobre Nosaltres": ("Sobre Nosotros", "EspaiCalma nace para mejorar concentración, productividad y bienestar."),
+        "Contacte": ("Contacto", "Envíanos un mensaje y te respondemos."),
+        "Reserva": ("Reserva", "Simula una reserva (MVP). Sin pago real."),
+    },
+    "ENG": {
+        "Inici": ("Welcome to EspaiCalma", "Quiet, comfortable spaces to study or work, bookable by the hour."),
+        "Espais i Serveis": ("Spaces & Services", "Pick the space that fits you best."),
+        "FAQs": ("FAQs", "Quick answers to common questions."),
+        "Sobre Nosaltres": ("About Us", "EspaiCalma helps people focus, be productive, and feel calm."),
+        "Contacte": ("Contact", "Send us a message and we’ll get back to you."),
+        "Reserva": ("Booking", "Simulate a booking (MVP). No real payment."),
+    },
+}
+
+# ---------------------------
+# CSS (fondo + tarjeta + tabs)
+# ---------------------------
+BG = "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=2400&q=70"
+
 st.markdown(
-    """
+    f"""
 <style>
-/* Fondo (tipo foto desenfocada) */
-.stApp{
+/* Fondo */
+.stApp {{
   background:
-    linear-gradient(rgba(0,0,0,.25),rgba(0,0,0,.25)),
-    url("https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=1800&q=70");
+    linear-gradient(rgba(0,0,0,.32), rgba(0,0,0,.32)),
+    url("{BG}");
   background-size: cover;
   background-position: center;
-}
+}}
 
-/* Sidebar panel */
-[data-testid="stSidebar"]{
-  background: #ffffff !important;
-}
-[data-testid="stSidebar"] > div:first-child{
-  padding-top: 24px;
-}
+/* Ocultar chrome */
+header {{visibility:hidden;}}
+#MainMenu {{visibility:hidden;}}
+footer {{visibility:hidden;}}
 
-/* Quitar header/menú */
-header{visibility:hidden;}
-#MainMenu{visibility:hidden;}
-footer{visibility:hidden;}
+/* Contenedor principal centrado */
+.ec-wrap {{
+  max-width: 1200px;
+  margin: 36px auto;
+  padding: 0 18px;
+}}
 
-/* Botón/CTA estilo "Reserva" */
-.ec-cta{
-  display:flex; align-items:center; gap:10px;
-  padding:12px 14px;
-  background:#c9ad78;
-  color:white;
-  border-radius:8px;
-  font-weight:600;
-  text-decoration:none;
-}
-.ec-cta:hover{ filter:brightness(0.98); }
+/* Tarjeta */
+.ec-card {{
+  background: rgba(255,255,255,.86);
+  border-radius: 16px;
+  box-shadow: 0 18px 55px rgba(0,0,0,.18);
+  padding: 26px 28px;
+}}
 
-/* Links del menú */
-.ec-item{
-  display:flex; align-items:center; gap:10px;
-  padding:10px 8px;
-  color:#5b6a6a;
-  text-decoration:none;
-  border-radius:8px;
-}
-.ec-item:hover{ background: rgba(201,173,120,.14); }
+/* Títulos */
+.ec-h1 {{
+  font-size: 44px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 6px 0;
+  text-shadow: 0 6px 26px rgba(0,0,0,.35);
+}}
+.ec-sub {{
+  color: rgba(255,255,255,.92);
+  font-size: 18px;
+  margin-bottom: 18px;
+  text-shadow: 0 6px 26px rgba(0,0,0,.35);
+}}
 
-/* Título marca */
-.ec-brand{
-  font-size:38px;
-  font-weight:500;
-  color:#6b7a7a;
-  line-height:1;
-}
-.ec-brand span{ color:#c9ad78; }
+/* Tabs: que parezcan botones */
+.stTabs [data-baseweb="tab-list"] {{
+  gap: 10px;
+}}
+.stTabs [data-baseweb="tab"] {{
+  background: rgba(0,0,0,.35);
+  border-radius: 12px;
+  padding: 10px 14px;
+  color: white;
+  border: 1px solid rgba(255,255,255,.12);
+}}
+.stTabs [aria-selected="true"] {{
+  background: rgba(201,173,120,.95);
+  color: #1b1f24;
+  border: 1px solid rgba(0,0,0,.06);
+  font-weight: 800;
+}}
 
-/* Iconos pequeños */
-.ec-ico{ width:18px; height:18px; fill:#6f7d7d; }
-.ec-social a{
-  display:inline-flex; align-items:center; justify-content:center;
-  width:30px; height:30px; border-radius:8px;
-  background: rgba(0,0,0,.04);
-  margin-right:10px;
-  text-decoration:none;
-}
-.ec-social a:hover{ background: rgba(201,173,120,.18); }
+/* Botón Reserva dentro de la sección (CTA) */
+.ec-cta button {{
+  background: #c94f4f !important;
+  color: white !important;
+  border-radius: 14px !important;
+  border: none !important;
+  padding: 12px 16px !important;
+  font-weight: 800 !important;
+}}
 </style>
 """,
     unsafe_allow_html=True,
 )
 
-# --- Estado de navegación ---
-if "page" not in st.session_state:
-    st.session_state.page = "Inici"
-if "lang" not in st.session_state:
-    st.session_state.lang = "CAT"
-
-
-def nav(to_page: str):
-    st.session_state.page = to_page
-
-
-# --- Sidebar (como el mockup) ---
-with st.sidebar:
-    # Logo + marca (SVG simple)
-    st.markdown(
-        """
-<div style="display:flex; align-items:center; gap:12px; padding:0 8px 10px 8px;">
-  <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">
-    <path d="M12 26 L32 12 L52 26 V52 H12 Z" fill="#6f7d7d" opacity="0.25"/>
-    <path d="M18 28 L32 18 L46 28 V50 H18 Z" fill="#6f7d7d" opacity="0.18"/>
-    <path d="M32 31c-6 0-12 4-12 10 0 5 4 9 12 9s12-4 12-9c0-6-6-10-12-10z" fill="#c9ad78" opacity="0.9"/>
-    <circle cx="32" cy="26" r="3" fill="#c9ad78"/>
-  </svg>
-  <div class="ec-brand">Espai<span>Calma</span></div>
-</div>
-""",
-        unsafe_allow_html=True,
-    )
-
-    # Menú (botones Streamlit para cambiar página)
-    st.button("🏠  Inici", use_container_width=True, on_click=nav, args=("Inici",))
-    st.button("🌿  Espais i Serveis", use_container_width=True, on_click=nav, args=("Espais i Serveis",))
-    st.button("❓  FAQs", use_container_width=True, on_click=nav, args=("FAQs",))
-    st.button("ℹ️  Sobre Nosaltres", use_container_width=True, on_click=nav, args=("Sobre Nosaltres",))
-    st.button("✉️  Contacte", use_container_width=True, on_click=nav, args=("Contacte",))
-
-    st.markdown("---")
-
-    # CTA Reserva
-    st.button("📅  Reserva", type="primary", use_container_width=True, on_click=nav, args=("Reserva",))
-
-    st.markdown("---")
-
-    # Idiomas
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        if st.button("CAT", use_container_width=True):
-            st.session_state.lang = "CAT"
-    with c2:
-        if st.button("ESP", use_container_width=True):
-            st.session_state.lang = "ESP"
-    with c3:
-        if st.button("ENG", use_container_width=True):
-            st.session_state.lang = "ENG"
-
-    st.markdown("---")
-
-    # Social (simple)
-    st.markdown(
-        """
-<div class="ec-social" style="padding:4px 6px 0 6px;">
-  <a href="https://instagram.com" target="_blank" title="Instagram">📷</a>
-  <a href="https://twitter.com" target="_blank" title="X / Twitter">🐦</a>
-  <a href="https://linkedin.com" target="_blank" title="LinkedIn">in</a>
-</div>
-""",
-        unsafe_allow_html=True,
-    )
-
-# --- Contenido principal (páginas) ---
-page = st.session_state.page
+# ---------------------------
+# HEADER (como tu mockup)
+# ---------------------------
 lang = st.session_state.lang
 
-titles = {
-    "CAT": {
-        "Inici": "Benvingut/da a EspaiCalma",
-        "Espais i Serveis": "Espais i Serveis",
-        "FAQs": "Preguntes freqüents",
-        "Sobre Nosaltres": "Sobre Nosaltres",
-        "Contacte": "Contacte",
-        "Reserva": "Reserva un espai",
-    },
-    "ESP": {
-        "Inici": "Bienvenido/a a EspaiCalma",
-        "Espais i Serveis": "Espacios y Servicios",
-        "FAQs": "Preguntas frecuentes",
-        "Sobre Nosaltres": "Sobre nosotros",
-        "Contacte": "Contacto",
-        "Reserva": "Reserva un espacio",
-    },
-    "ENG": {
-        "Inici": "Welcome to EspaiCalma",
-        "Espais i Serveis": "Spaces & Services",
-        "FAQs": "FAQs",
-        "Sobre Nosaltres": "About us",
-        "Contacte": "Contact",
-        "Reserva": "Book a space",
-    },
-}
+st.markdown('<div class="ec-wrap">', unsafe_allow_html=True)
 
-st.title(titles[lang][page])
+# selector de idioma arriba (como los 3 botones)
+c_lang1, c_lang2, c_lang3, _ = st.columns([1, 1, 1, 6])
+with c_lang1:
+    if st.button("CAT", use_container_width=True):
+        st.session_state.lang = "CAT"
+with c_lang2:
+    if st.button("ESP", use_container_width=True):
+        st.session_state.lang = "ESP"
+with c_lang3:
+    if st.button("ENG", use_container_width=True):
+        st.session_state.lang = "ENG"
 
-if page == "Inici":
+lang = st.session_state.lang
+
+title, subtitle = T[lang]["Inici"]  # título de bienvenida fijo (como landing)
+st.markdown(f'<div class="ec-h1">{title}</div>', unsafe_allow_html=True)
+st.markdown(f'<div class="ec-sub">{subtitle}</div>', unsafe_allow_html=True)
+
+# ---------------------------
+# NAV (PESTAÑAS ARRIBA: SIEMPRE visibles)
+# ---------------------------
+tabs = st.tabs(["🏠 Inici", "🌿 Espais i Serveis", "❓ FAQs", "ℹ️ Sobre Nosaltres", "✉️ Contacte", "🗓️ Reserva"])
+
+# ---------------------------
+# TAB 1: Inici
+# ---------------------------
+with tabs[0]:
+    st.markdown('<div class="ec-card">', unsafe_allow_html=True)
+    st.info("MVP: demo de navegació + simulació de reserva (sense pagament real)." if lang == "CAT"
+            else "MVP: demo de navegación + simulación de reserva (sin pago real)." if lang == "ESP"
+            else "MVP: navigation demo + booking simulation (no real payment).")
+
     st.write(
-        "Espais tranquils i còmodes per estudiar o treballar, reservables per hores des d’una app o web."
+        "EspaiCalma ofereix espais silenciosos amb Wi-Fi, taula i cadira ergonòmica. Reserva ràpida i flexible."
         if lang == "CAT"
-        else "Espacios tranquilos y cómodos para estudiar o trabajar, reservables por horas desde una app o web."
+        else "EspaiCalma ofrece espacios silenciosos con Wi-Fi, mesa y silla ergonómica. Reserva rápida y flexible."
         if lang == "ESP"
-        else "Quiet, comfortable spaces to study or work, bookable by the hour via app or web."
+        else "EspaiCalma offers quiet spaces with Wi-Fi, desk and ergonomic chair. Fast, flexible booking."
     )
-    st.info("MVP: demo de navegació + simulació de reserva (sense pagament real).")
+    st.markdown("</div>", unsafe_allow_html=True)
 
-elif page == "Espais i Serveis":
-    st.subheader("Exemples d’espais")
+# ---------------------------
+# TAB 2: Espais i Serveis
+# ---------------------------
+with tabs[1]:
+    st.markdown('<div class="ec-card">', unsafe_allow_html=True)
+    st.subheader("Espais (exemple)" if lang != "ENG" else "Spaces (sample)")
     c1, c2, c3 = st.columns(3)
     with c1:
-        st.image("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=70", caption="Sala privada (1 persona)")
-        st.caption("Wi-Fi • Silenci • Taula • Endolls")
+        st.image("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=900&q=70",
+                 caption="Sala privada (1)")
+        st.caption("Wi-Fi • Silenci • Endolls")
     with c2:
-        st.image("https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=800&q=70", caption="Sala petita (2 persones)")
-        st.caption("Ideal per reunions o treball en parella")
+        st.image("https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=900&q=70",
+                 caption="Sala petita (2)")
+        st.caption("Ideal per reunions" if lang == "CAT" else "Ideal para reuniones" if lang == "ESP" else "Great for meetings")
     with c3:
-        st.image("https://images.unsplash.com/photo-1449247709967-d4461a6a6103?auto=format&fit=crop&w=800&q=70", caption="Espai llum natural")
-        st.caption("Ventilació • Confort • Concentració")
+        st.image("https://images.unsplash.com/photo-1449247709967-d4461a6a6103?auto=format&fit=crop&w=900&q=70",
+                 caption="Llum natural" if lang == "CAT" else "Luz natural" if lang == "ESP" else "Natural light")
+        st.caption("Ventilació • Confort" if lang == "CAT" else "Ventilación • Confort" if lang == "ESP" else "Ventilation • Comfort")
 
-    st.subheader("Tarifes (exemple)")
-    st.write("• 3 € / hora\n\n• 30 € / mes (accés il·limitat a certs espais)")
+    st.subheader("Tarifes" if lang != "ENG" else "Pricing")
+    st.write("• 3 € / hora\n\n• 30 € / mes (accés il·limitat a certs espais)"
+             if lang == "CAT"
+             else "• 3 € / hora\n\n• 30 € / mes (acceso ilimitado a ciertos espacios)"
+             if lang == "ESP"
+             else "• 3 € / hour\n\n• 30 € / month (unlimited access to selected spaces)")
+    st.markdown("</div>", unsafe_allow_html=True)
 
-elif page == "FAQs":
-    with st.expander("Com funciona la reserva?"):
-        st.write("Selecciona ubicació, dia i hora. Confirma i rep la confirmació al correu.")
-    with st.expander("Hi ha horaris nocturns?"):
-        st.write("En fase pilot s’ampliaran horaris en períodes d’exàmens segons demanda.")
-    with st.expander("Què inclou l’espai?"):
-        st.write("Wi-Fi, taula, cadira ergonòmica, endolls i ambient silenciós.")
+# ---------------------------
+# TAB 3: FAQs
+# ---------------------------
+with tabs[2]:
+    st.markdown('<div class="ec-card">', unsafe_allow_html=True)
+    with st.expander("Com funciona la reserva?" if lang == "CAT" else "¿Cómo funciona la reserva?" if lang == "ESP" else "How does booking work?"):
+        st.write("Selecciona ubicació, data i hores. Confirma i rep una confirmació (demo)."
+                 if lang != "ENG" else "Choose location, date and hours. Confirm and get a demo confirmation.")
+    with st.expander("Hi ha horaris nocturns?" if lang == "CAT" else "¿Hay horarios nocturnos?" if lang == "ESP" else "Do you offer night hours?"):
+        st.write("En fase pilot es poden ampliar horaris en períodes d’exàmens segons demanda."
+                 if lang == "CAT" else
+                 "En fase piloto se pueden ampliar horarios en periodos de exámenes según demanda."
+                 if lang == "ESP" else
+                 "During the pilot, we can extend hours in exam periods depending on demand.")
+    with st.expander("Què inclou l’espai?" if lang == "CAT" else "¿Qué incluye el espacio?" if lang == "ESP" else "What's included?"):
+        st.write("Wi-Fi, taula, cadira ergonòmica, endolls i ambient tranquil."
+                 if lang == "CAT" else
+                 "Wi-Fi, mesa, silla ergonómica, enchufes y ambiente tranquilo."
+                 if lang == "ESP" else
+                 "Wi-Fi, desk, ergonomic chair, power outlets, and a quiet atmosphere.")
+    st.markdown("</div>", unsafe_allow_html=True)
 
-elif page == "Sobre Nosaltres":
+# ---------------------------
+# TAB 4: Sobre Nosaltres
+# ---------------------------
+with tabs[3]:
+    st.markdown('<div class="ec-card">', unsafe_allow_html=True)
     st.write(
-        "EspaiCalma neix per resoldre la manca d’espais tranquils per a estudiants i joves professionals."
+        "Projecte orientat a estudiants i joves professionals que necessiten concentració fora de casa."
         if lang == "CAT"
-        else "EspaiCalma nace para resolver la falta de espacios tranquilos para estudiantes y jóvenes profesionales."
+        else "Proyecto orientado a estudiantes y jóvenes profesionales que necesitan concentración fuera de casa."
         if lang == "ESP"
-        else "EspaiCalma was created to solve the lack of quiet spaces for students and young professionals."
+        else "A project for students and young professionals who need focus outside home."
     )
-    st.write("Objectiu: facilitar concentració, productivitat i benestar.")
+    st.write(
+        "Objectiu: reduir soroll i distraccions i facilitar una reserva simple i ràpida."
+        if lang == "CAT"
+        else "Objetivo: reducir ruido y distracciones y facilitar una reserva simple y rápida."
+        if lang == "ESP"
+        else "Goal: reduce noise/distractions and make booking simple and fast."
+    )
+    st.markdown("</div>", unsafe_allow_html=True)
 
-elif page == "Contacte":
-    st.write("Deixa’ns el teu missatge i et respondrem.")
-    with st.form("contact_form"):
-        name = st.text_input("Nom" if lang == "CAT" else "Nombre" if lang == "ESP" else "Name")
-        email = st.text_input("Email")
-        msg = st.text_area("Missatge" if lang == "CAT" else "Mensaje" if lang == "ESP" else "Message")
-        ok = st.form_submit_button("Enviar" if lang != "ENG" else "Send")
+# ---------------------------
+# TAB 5: Contacte
+# ---------------------------
+with tabs[4]:
+    st.markdown('<div class="ec-card">', unsafe_allow_html=True)
+    with st.form("contact"):
+        st.text_input("Nom" if lang == "CAT" else "Nombre" if lang == "ESP" else "Name")
+        st.text_input("Email")
+        st.text_area("Missatge" if lang == "CAT" else "Mensaje" if lang == "ESP" else "Message")
+        sent = st.form_submit_button("Enviar" if lang != "ENG" else "Send")
+    if sent:
+        st.success("Missatge enviat (demo)." if lang == "CAT" else "Mensaje enviado (demo)." if lang == "ESP" else "Message sent (demo).")
+    st.markdown("</div>", unsafe_allow_html=True)
+
+# ---------------------------
+# TAB 6: Reserva
+# ---------------------------
+with tabs[5]:
+    st.markdown('<div class="ec-card">', unsafe_allow_html=True)
+    with st.form("booking"):
+        loc = st.selectbox("Ubicació" if lang == "CAT" else "Ubicación" if lang == "ESP" else "Location",
+                           ["Eixample", "Gràcia", "Sants", "Poblenou"])
+        sp = st.selectbox("Espai" if lang == "CAT" else "Espacio" if lang == "ESP" else "Space",
+                          ["Sala privada (1)", "Sala petita (2)", "Llum natural"])
+        st.date_input("Data" if lang == "CAT" else "Fecha" if lang == "ESP" else "Date",
+                      value=date.today())
+        h = st.slider("Hores" if lang == "CAT" else "Horas" if lang == "ESP" else "Hours",
+                      1, 8, 2)
+        price = 3
+        st.write((f"Preu estimat: **{h*price} €** ({price} €/hora)" if lang == "CAT"
+                 else f"Precio estimado: **{h*price} €** ({price} €/hora)" if lang == "ESP"
+                 else f"Estimated price: **{h*price} €** ({price} €/hour)"))
+        ok = st.form_submit_button("Confirmar reserva" if lang != "ENG" else "Confirm booking")
+
     if ok:
-        st.success("Missatge enviat (demo). Gràcies!")
+        st.success("✅ Reserva simulada (demo).")
+        st.info("Aquesta acció pot comptar com a ‘reserva de prova’ per a les mètriques de l’experiment."
+                if lang == "CAT"
+                else "Esta acción puede contar como ‘reserva de prueba’ para las métricas del experimento."
+                if lang == "ESP"
+                else "This action can count as a ‘test booking’ for your experiment metrics.")
+    st.markdown("</div>", unsafe_allow_html=True)
 
-elif page == "Reserva":
-    st.write("Simula una reserva (MVP). No es farà cap cobrament real.")
-    with st.form("booking_form"):
-        location = st.selectbox(
-            "Ubicació" if lang == "CAT" else "Ubicación" if lang == "ESP" else "Location",
-            ["Eixample", "Gràcia", "Sants", "Poblenou"],
-        )
-        space = st.selectbox(
-            "Tipus d’espai" if lang == "CAT" else "Tipo de espacio" if lang == "ESP" else "Space type",
-            ["Sala privada (1)", "Sala petita (2)", "Espai llum natural"],
-        )
-        date = st.date_input("Data" if lang != "ENG" else "Date")
-        hours = st.slider("Hores" if lang != "ENG" else "Hours", 1, 8, 2)
-        price_per_hour = 3
-        total = hours * price_per_hour
-        st.write(f"Preu estimat: **{total} €** ({price_per_hour} €/hora)")
-        submit = st.form_submit_button("Confirmar reserva" if lang == "CAT" else "Confirmar reserva" if lang == "ESP" else "Confirm booking")
+st.markdown("</div>", unsafe_allow_html=True)
 
-    if submit:
-        st.success(f"Reserva simulada ✅  {location} · {space} · {hours}h · {total}€ (demo)")
-        st.info("Aquesta acció es podria comptar com a ‘reserva de prova’ per a les mètriques del vostre experiment.")
