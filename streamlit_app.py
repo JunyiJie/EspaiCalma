@@ -159,12 +159,7 @@ with tabs[0]:
     st.markdown("### Focus & Silence")
     st.write("EspaiCalma és la solució ideal per a qui busca un ambient de treball lliure de sorolls.")
     st.markdown("</div>", unsafe_allow_html=True)
-    st.markdown('<div class="ec-card">', unsafe_allow_html=True)
-    st.info(t["mvp"])
-    st.subheader(t["mission_title"])
-    st.write(t["mission_text"])
-    
-    st.markdown("---")
+
     st.markdown("### Per què EspaiCalma?")
     c1, c2, c3 = st.columns(3)
     c1.markdown("#### 🔇 Silenci Real\nInsonorització certificada per a una concentració absoluta.")
