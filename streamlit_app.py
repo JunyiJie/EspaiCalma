@@ -1,5 +1,12 @@
 import streamlit as st
 from datetime import date
+import re  # Importamos para validar el formato de email
+
+# Función auxiliar para validar email
+def is_valid_email(email):
+    # Patrón estándar de validación de correo electrónico
+    pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+    return re.match(pattern, email) is not None
 
 # Configuración de la página
 st.set_page_config(page_title="EspaiCalma", page_icon="🧘", layout="wide")
@@ -29,6 +36,7 @@ TXT = {
         "booking_confirm": "Confirmar reserva",
         "booking_ok": "✅ Reserva simulada amb èxit!",
         "booking_error": "❌ Error: Emplena tots els camps correctament.",
+        "email_error": "❌ Error: Introdueix un correu electrònic vàlid.",
         "phone_error": "❌ Error: El telèfon només pot contenir números.",
         "contact_error": "❌ Error: Introdueix el teu correu electrònic.",
         "cancel_warning": "⚠️ Avís: Si passats 10 minuts de la reserva no hi ha ningú, es cancel·larà.",
@@ -61,6 +69,7 @@ TXT = {
         "booking_confirm": "Confirmar reserva",
         "booking_ok": "✅ ¡Reserva simulada con éxito!",
         "booking_error": "❌ Error: Rellena todos los campos correctamente.",
+        "email_error": "❌ Error: Introduce un correo electrónico válido.",
         "phone_error": "❌ Error: El teléfono solo puede contener números.",
         "contact_error": "❌ Error: Introduce tu email.",
         "cancel_warning": "⚠️ Aviso: Si pasados 10 minutos de la reserva no hay nadie, se cancelará.",
@@ -93,6 +102,7 @@ TXT = {
         "booking_confirm": "Confirm booking",
         "booking_ok": "✅ Booking simulated successfully!",
         "booking_error": "❌ Error: Fill in all fields correctly.",
+        "email_error": "❌ Error: Please enter a valid email address.",
         "phone_error": "❌ Error: Phone must contain only numbers.",
         "contact_error": "❌ Error: Please enter your email.",
         "cancel_warning": "⚠️ Notice: If no one is present 10 min after the booking, it will be cancelled.",
@@ -194,7 +204,7 @@ with tabs[2]:
     e4.markdown('<div class="team-card"><b>Junyi Jie</b><br><span>CTO & Design</span></div>', unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
-# --- NOVA TAB: NORMATIVA ---
+# --- TAB NORMATIVA ---
 with tabs[3]:
     st.markdown('<div class="ec-card">', unsafe_allow_html=True)
     st.subheader(t["rules_title"])
@@ -223,7 +233,7 @@ with tabs[4]:
     with st.expander(t["faq2"]): st.write(t["faq2a"])
     st.markdown("</div>", unsafe_allow_html=True)
 
-# --- TAB CONTACTE ---
+# --- TAB CONTACTE (CON VALIDACIÓN DE EMAIL) ---
 with tabs[5]:
     st.markdown('<div class="ec-card">', unsafe_allow_html=True)
     st.subheader(t["contact_title"])
@@ -234,11 +244,13 @@ with tabs[5]:
         if st.form_submit_button(t["contact_send"]):
             if not mail_c.strip():
                 st.error(t["contact_error"])
+            elif not is_valid_email(mail_c):
+                st.error(t["email_error"])
             else:
                 st.success("Sent!")
     st.markdown("</div>", unsafe_allow_html=True)
 
-# --- TAB RESERVA ---
+# --- TAB RESERVA (CON VALIDACIÓN DE EMAIL Y TELÉFONO) ---
 with tabs[6]:
     st.markdown('<div class="ec-card">', unsafe_allow_html=True)
     st.subheader(t["booking_title"])
@@ -267,6 +279,8 @@ with tabs[6]:
         if st.form_submit_button(t["booking_confirm"], use_container_width=True):
             if not n_v.strip() or not s_v.strip() or not m_v.strip() or not p_v.strip():
                 st.error(t["booking_error"])
+            elif not is_valid_email(m_v):
+                st.error(t["email_error"])
             elif not p_v.isdigit():
                 st.error(t["phone_error"])
             else:
