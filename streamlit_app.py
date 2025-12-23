@@ -181,7 +181,28 @@ with tabs[1]:
     st.subheader(t["pricing"])
     st.write("3 € / hora")
     st.markdown("</div>", unsafe_allow_html=True)
-
+    
+# --- NOVA TAB: NORMATIVA ---
+with tabs[3]:
+    st.markdown('<div class="ec-card">', unsafe_allow_html=True)
+    st.subheader(t["rules_title"])
+    
+    col_rules1, col_rules2 = st.columns(2)
+    with col_rules1:
+        st.markdown("#### 🔇 Silenci i Comportament")
+        st.markdown('<div class="rule-item"><b>Respecte al silenci:</b> Les zones de cabines i silenci obert exigeixen silenci absolut. Prohibit l\'ús d\'altaveus.</div>', unsafe_allow_html=True)
+        st.markdown('<div class="rule-item"><b>Trucades:</b> Les trucades només es poden realitzar dins de les cabines privades insonoritzades.</div>', unsafe_allow_html=True)
+        st.markdown('<div class="rule-item"><b>Sense fums:</b> Prohibit fumar o utilitzar vapers en qualsevol àrea de l\'establiment.</div>', unsafe_allow_html=True)
+    
+    with col_rules2:
+        st.markdown("#### 🍎 Alimentació i Higiene")
+        st.markdown('<div class="rule-item"><b>Zones de menjar:</b> Prohibit menjar a les taules de treball. S\'ha d\'utilitzar exclusivament la <b>sala de menjador / office</b>.</div>', unsafe_allow_html=True)
+        st.markdown('<div class="rule-item"><b>Begudes:</b> Es permeten begudes sempre que estiguin en envasos amb tapa per evitar vessaments sobre l\'equipament.</div>', unsafe_allow_html=True)
+        st.markdown('<div class="rule-item"><b>Neteja:</b> Cada usuari és responsable de deixar el seu espai net i recollit en finalitzar la reserva.</div>', unsafe_allow_html=True)
+    
+    st.warning("L'incompliment d'aquestes normes pot comportar la cancel·lació de la reserva sense dret a reemborsament.")
+    st.markdown("</div>", unsafe_allow_html=True)
+    
 # --- TAB EQUIP ---
 with tabs[2]:
     st.markdown('<div class="ec-card">', unsafe_allow_html=True)
