@@ -27,8 +27,9 @@ TXT = {
         "contact_send": "Enviar Missatge",
         "booking_confirm": "Confirmar reserva",
         "booking_ok": "✅ Reserva simulada amb èxit!",
-        "booking_error": "❌ Error: Emplena Nom, Cognoms, Email i Telèfon.",
-        "contact_error": "❌ Error: Introdueix el teu correu electrònic per enviar el missatge.",
+        "booking_error": "❌ Error: Emplena tots els camps correctament.",
+        "phone_error": "❌ Error: El telèfon només pot contenir números.",
+        "contact_error": "❌ Error: Introdueix el teu correu electrònic.",
         "booking_info": "Aquesta acció ens ajuda a mesurar l'interès del projecte.",
         "cancel_warning": "⚠️ Avís: Si passats 10 minuts de la reserva no hi ha ningú, es cancel·larà.",
         "loc": "Ubicació",
@@ -39,7 +40,7 @@ TXT = {
         "name": "Nom",
         "surname": "Cognoms",
         "email": "Email",
-        "phone": "Telèfon",
+        "phone": "Telèfon (només números)",
         "pricing": "Tarifes",
         "team_title": "Equip Directiu",
         "faq1": "Com funciona?", "faq1a": "Selecciona espai, data i confirma dades.",
@@ -58,8 +59,9 @@ TXT = {
         "contact_send": "Enviar Mensaje",
         "booking_confirm": "Confirmar reserva",
         "booking_ok": "✅ ¡Reserva simulada con éxito!",
-        "booking_error": "❌ Error: Rellena Nombre, Apellidos, Email y Teléfono.",
-        "contact_error": "❌ Error: Introduce tu email para enviar el mensaje.",
+        "booking_error": "❌ Error: Rellena todos los campos correctamente.",
+        "phone_error": "❌ Error: El teléfono solo puede contener números.",
+        "contact_error": "❌ Error: Introduce tu email.",
         "booking_info": "Esta acción nos ayuda a medir el interés del proyecto.",
         "cancel_warning": "⚠️ Aviso: Si pasados 10 minutos de la reserva no hay nadie, se cancelará.",
         "loc": "Ubicación",
@@ -70,7 +72,7 @@ TXT = {
         "name": "Nombre",
         "surname": "Apellidos",
         "email": "Email",
-        "phone": "Teléfono",
+        "phone": "Teléfono (solo números)",
         "pricing": "Tarifas",
         "team_title": "Equipo Directivo",
         "faq1": "¿Cómo funciona?", "faq1a": "Selecciona espacio, fecha y confirma datos.",
@@ -89,8 +91,9 @@ TXT = {
         "contact_send": "Send Message",
         "booking_confirm": "Confirm booking",
         "booking_ok": "✅ Booking simulated successfully!",
-        "booking_error": "❌ Error: Fill in Name, Surname, Email, and Phone.",
-        "contact_error": "❌ Error: Please enter your email to send the message.",
+        "booking_error": "❌ Error: Fill in all fields correctly.",
+        "phone_error": "❌ Error: Phone must contain only numbers.",
+        "contact_error": "❌ Error: Please enter your email.",
         "booking_info": "This action helps us measure project interest.",
         "cancel_warning": "⚠️ Notice: If no one is present 10 min after the booking, it will be cancelled.",
         "loc": "Location",
@@ -101,7 +104,7 @@ TXT = {
         "name": "First Name",
         "surname": "Last Name",
         "email": "Email",
-        "phone": "Phone",
+        "phone": "Phone (numbers only)",
         "pricing": "Pricing",
         "team_title": "Management Team",
         "faq1": "How it works?", "faq1a": "Select space, date and confirm your details.",
@@ -123,7 +126,7 @@ st.markdown(f"""
     }}
     .hero-title {{ font-size: 70px; font-weight: 850; color: white; text-align: center; }}
     .hero-sub {{ font-size: 26px; color: #E0E0E0; text-align: center; margin-bottom: 40px; }}
-    .ec-card {{ background: rgba(255, 255, 255, 0.98); padding: 35px; border-radius: 15px; color: #1a1a1a; }}
+    .ec-card {{ background: rgba(255, 255, 255, 0.98); padding: 35px; border-radius: 15px; color: #1a1a1a; margin-bottom: 20px; }}
     .team-card {{
         background: #f1f3f5; padding: 20px; border-radius: 10px; text-align: center; 
         border-top: 5px solid #C9AD78; color: #1a1a1a !important;
@@ -158,15 +161,15 @@ with tabs[0]:
     st.info(t["mvp"])
     st.markdown("### Focus & Silence")
     st.write("EspaiCalma és la solució ideal per a qui busca un ambient de treball lliure de sorolls.")
-    st.markdown("</div>", unsafe_allow_html=True)
-
+    
     st.markdown("### Per què EspaiCalma?")
     c1, c2, c3 = st.columns(3)
     c1.markdown("#### 🔇 Silenci Real\nInsonorització certificada per a una concentració absoluta.")
     c2.markdown("#### 🪑 Ergonomia\nCadires d'oficina de gamma alta per evitar fatiga física.")
     c3.markdown("#### 🚀 Connexió\nWi-Fi 6 de baixa latència, ideal per a exàmens o videotrucades.")
     st.markdown("</div>", unsafe_allow_html=True)
-# --- TAB SERVEIS (CON IMÁGENES) ---
+
+# --- TAB SERVEIS ---
 with tabs[1]:
     st.markdown('<div class="ec-card">', unsafe_allow_html=True)
     st.subheader(t["spaces_title"])
@@ -179,7 +182,7 @@ with tabs[1]:
     st.write("3 € / hora")
     st.markdown("</div>", unsafe_allow_html=True)
 
-# --- TAB EQUIPO (NOMBRES REALES DEL PDF) ---
+# --- TAB EQUIP ---
 with tabs[2]:
     st.markdown('<div class="ec-card">', unsafe_allow_html=True)
     st.subheader(t["team_title"])
@@ -198,7 +201,7 @@ with tabs[3]:
     with st.expander(t["faq2"]): st.write(t["faq2a"])
     st.markdown("</div>", unsafe_allow_html=True)
 
-# --- TAB CONTACTE (CON VALIDACIÓN) ---
+# --- TAB CONTACTE ---
 with tabs[4]:
     st.markdown('<div class="ec-card">', unsafe_allow_html=True)
     st.subheader(t["contact_title"])
@@ -213,7 +216,7 @@ with tabs[4]:
                 st.success("Sent!")
     st.markdown("</div>", unsafe_allow_html=True)
 
-# --- TAB RESERVA (AÑADIDAS LOCALIZACIÓN Y SERVICIO) ---
+# --- TAB RESERVA (AMB VALIDACIÓ NUMÈRICA DE TELÈFON) ---
 with tabs[5]:
     st.markdown('<div class="ec-card">', unsafe_allow_html=True)
     st.subheader(t["booking_title"])
@@ -225,25 +228,15 @@ with tabs[5]:
         n_v = col_a.text_input(t["name"])
         s_v = col_a.text_input(t["surname"])
         m_v = col_b.text_input(t["email"])
+        # Campo de teléfono
         p_v = col_b.text_input(t["phone"])
         
         st.divider()
         st.markdown("#### 2. Detalles del Servicio")
         col_c, col_d = st.columns(2)
         with col_c:
-            # Añadida la Localización
-            localizacion = st.selectbox(t["loc"], [
-                "EEBE - Campus Besòs (UPC)", 
-                "Zona Universitària - Les Corts", 
-            ])
-            # Añadido el Tipo de Servicio
-            tipo_servicio = st.selectbox(t["space"], [
-                "Cabina Privada (1 pers)", 
-                "Sala de Treball (2-4 pers)", 
-                "Zona Silenci Obert", 
-                "Zona Confort / Soft Seating"
-            ])
-        
+            localizacion = st.selectbox(t["loc"], ["EEBE - Campus Besòs (UPC)", "Zona Universitària - Les Corts"])
+            tipo_servicio = st.selectbox(t["space"], ["Cabina Privada", "Sala de Treball", "Zona Silenci", "Zona Confort"])
         with col_d:
             fecha = st.date_input(t["date"], min_value=date.today())
             h_v = st.slider(t["hours"], 1, 8, 2)
@@ -251,9 +244,12 @@ with tabs[5]:
         st.write(f"### {t['price']}: {h_v * 3} €")
         
         if st.form_submit_button(t["booking_confirm"], use_container_width=True):
+            # VALIDACIÓN: Todos los campos llenos y que el teléfono sea numérico
             if not n_v.strip() or not s_v.strip() or not m_v.strip() or not p_v.strip():
                 st.error(t["booking_error"])
+            elif not p_v.isdigit():
+                st.error(t["phone_error"])
             else:
-                st.success(f"{t['booking_ok']} - Ubicació: {localizacion}")
+                st.success(f"{t['booking_ok']} - {localizacion}")
                 st.balloons()
     st.markdown("</div>", unsafe_allow_html=True)
