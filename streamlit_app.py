@@ -190,7 +190,7 @@ with tabs[1]:
     c3.image("https://images.unsplash.com/photo-1449247709967-d4461a6a6103?w=400", caption="Zona Confort")
     st.divider()
     st.subheader(t["pricing"])
-    st.write("3 € / hora")
+    st.write("6 € / hora")
     st.markdown("</div>", unsafe_allow_html=True)
 
 # --- TAB EQUIP ---
@@ -275,7 +275,7 @@ with tabs[6]:
             fecha = st.date_input(t["date"], min_value=date.today())
             h_v = st.slider(t["hours"], 1, 8, 2)
             
-        st.write(f"### {t['price']}: {h_v * 3} €")
+        st.write(f"### {t['price']}: {h_v * 6} €")
         
         if st.form_submit_button(t["booking_confirm"], use_container_width=True):
             if not n_v.strip() or not s_v.strip() or not m_v.strip() or not p_v.strip():
